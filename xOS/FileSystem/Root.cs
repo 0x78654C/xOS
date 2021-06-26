@@ -2,12 +2,22 @@
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using Cosmos.HAL;
+using Cosmos.Common;
 using Sys = Cosmos.System;
-
 namespace xOS.FileSystem
 {
     public static class Root
     {
+        //declare global variables
+        private static string SysVol = GVariables.SysVol;
+        private static string SysDir = GVariables.SysDir;
+        private static string UsrDir = GVariables.UsrDir;
+        private static string LogDir = GVariables.LogDir;
+        private static string SYSLogFile = GVariables.SYSLogFile;
+        private static string UsrFile = GVariables.UsrFile;
+        //--------------------------
+
         /*Creating root file system*/
         public static void Create_Root()
         {
@@ -15,7 +25,40 @@ namespace xOS.FileSystem
             fs = new Sys.FileSystem.CosmosVFS();
             Sys.FileSystem.VFS.VFSManager.RegisterVFS(fs);
         }
+        
+        public static void Initialize_Sys_Dirs()
+        {
+            Console.WriteLine("Loading system...");
+            if (!System.IO.Directory.Exists(SysDir))
+            {
+                System.IO.Directory.CreateDirectory(SysDir);
+                Console.WriteLine($"Created {SysDir} directory!");
+            }
 
+            if (!System.IO.Directory.Exists(UsrDir))
+            {
+                System.IO.Directory.CreateDirectory(UsrDir);
+                Console.WriteLine($"Created {UsrDir} directory!");
+            }
+
+            if (!System.IO.Directory.Exists(UsrFile))
+            {
+                System.IO.Directory.CreateDirectory(UsrFile);
+                Console.WriteLine($"Created {UsrFile} directory!");
+            }
+
+            if (!System.IO.Directory.Exists(LogDir))
+            {
+                System.IO.Directory.CreateDirectory(LogDir);
+                Console.WriteLine($"Created {LogDir} directory!");
+            }
+
+            if (!System.IO.File.Exists(SYSLogFile))
+            {
+                System.IO.File.Create(SYSLogFile);
+                Console.WriteLine($"Created {SYSLogFile} file!");
+            }
+        }
         public static void Test_Root()
         {
             string[] filePaths = System.IO.Directory.GetFiles(@"0:\");
@@ -29,7 +72,7 @@ namespace xOS.FileSystem
                 Console.WriteLine(System.IO.Path.GetFileName(path));
             }
             foreach (var d in System.IO.Directory.GetDirectories(@"0:\"))
-            {
+           {
                 var dir = new DirectoryInfo(d);
                 var dirName = dir.Name;
 
@@ -63,67 +106,6 @@ namespace xOS.FileSystem
         public static void Open_Directory()
         {
 //future work
-        }
-
-        public static void Read_File(string FileName)
-        {
-            try
-            {
-                FileName = FileName.Split(' ')[1];
-                if (System.IO.File.Exists(FileName))
-                {
-                    var hello_file = Sys.FileSystem.VFS.VFSManager.GetFile(FileName);
-                    var hello_file_stream = hello_file.GetFileStream();
-
-                    if (hello_file_stream.CanRead)
-                    {
-                        byte[] text_to_read = new byte[hello_file_stream.Length];
-                        hello_file_stream.Read(text_to_read, 0, (int)hello_file_stream.Length);
-                        Console.WriteLine(Encoding.Default.GetString(text_to_read));
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"FIle {FileName} dose not exit!");
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
-        }
-
-        /// <summary>
-        /// Write data to file. 
-        /// At the moment only ASCII
-        /// </summary>
-        /// <param name="FileName"></param>
-        public static void Write_To_File(string FileName)
-        {
-            try
-            {
-                string Fn = FileName.Split(' ')[1];
-                string Data = FileName.Split(' ')[2];
-                var hello_file = Sys.FileSystem.VFS.VFSManager.GetFile(@Fn);
-                if (System.IO.File.Exists(@Fn))
-                {
-                    var hello_file_stream = hello_file.GetFileStream();
-
-                    if (hello_file_stream.CanWrite)
-                    {
-                        byte[] text_to_write = Encoding.ASCII.GetBytes(Data);
-                        hello_file_stream.Write(text_to_write, 0, text_to_write.Length);
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"File {FileName} dose not exist!");
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
         }
     }
 }
