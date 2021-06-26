@@ -12,11 +12,14 @@ namespace xOS
 {
     public class Kernel : Sys.Kernel
     {
+
        
         protected override void BeforeRun()
         {
             Console.WriteLine("xOS booted successfully. Type a line of text to get it echoed back.");
             Root.Create_Root();
+            Root.Initialize_Sys_Dirs();
+            CLog.CLog.SysLog_LoadOS();
             Console.Clear();
             Console.WriteLine("--------------------Welcome to xOS----------------------");
         }
