@@ -13,25 +13,37 @@ namespace xOS.Commnads
             //create file
             if (input.StartsWith("mkfile"))
             {
-                FileSystem.File.CreateFile(input);
+                File.CreateFile(input);
             }
 
             //delete file
             if (input.StartsWith("rf"))
             {
-                FileSystem.File.DeleteFile(input);
+                File.DeleteFile(input);
             }
 
             //read file
             if (input.StartsWith("cat"))
             {
-                Root.Read_File(input);
+                File.Read_File(input);
             }
 
             //write to file
             if (input.StartsWith("wf"))
             {
-                Root.Write_To_File(input);
+                File.Write_To_File(input);
+            }
+
+            //append to file with type
+            if (input.StartsWith("af"))
+            {
+                File.Append_To_File(input);
+            }
+
+            //append to file
+            if (input.StartsWith("afx"))
+            {
+                File.Append_To_File2(input);
             }
             #endregion
 
