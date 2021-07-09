@@ -26,6 +26,56 @@ namespace xOS.FileSystem
             Sys.FileSystem.VFS.VFSManager.RegisterVFS(fs);
         }
         
+        //login system
+        public static string UserLogin()
+        {
+
+            Console.WriteLine("--Login--");
+            Console.Write("UserName: ");
+            string user = Console.ReadLine();
+            string o=string.Empty;
+            try
+            {
+                string[] UserFileRead;
+                if (System.IO.File.Exists(UsrFile))
+                {
+                    UserFileRead = System.IO.File.ReadAllLines(UsrFile);
+                    foreach(var User in UserFileRead)
+                    {
+                        if (User.Split('|')[0] == user)
+                        {
+                            string UserP = User.Split('|')[1];
+                            Console.Write("Password: ");
+                            string pass = Console.ReadLine();
+
+                            if (pass != UserP)
+                            {
+                                Console.WriteLine("Wrong passwsord!");
+                                o = "Wrong passwsord!";
+                            }
+                            else
+                            {
+                                o = $"logged|{User}";
+                                CLog.CLog.SysLog_LoadOS($"User: {user} logged");
+                            }
+                        }
+                        else
+                        {
+                            o = $"User {user} dose not exist!";
+                        }
+                    }
+                }
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            if(o.Contains("dose not exist"))
+            {
+                Console.WriteLine($"User {user} dose not exist!");
+            }
+            return o;
+        }
         public static void Initialize_Sys_Dirs()
         {
             Console.WriteLine("Loading system...");
