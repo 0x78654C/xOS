@@ -4,133 +4,103 @@ using System.Text;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Security.Cryptography;
+using System.IO;
 
 namespace xOS.FileSystem
 {
-    public static class Crypto
+    public static class Cryptography
     {
+        #region Settings
 
-        public class MEX
+        private static int _iterations = 2;
+        private static int _keySize = 256;
+
+        private static string _hash = "SHA512";
+        private static string _salt = "aselrias38490a32"; // Random
+        private static string _vector = "8947az34awl34kjq"; // Random
+
+        #endregion
+
+        public static string Encrypt(string value, string password)
         {
-            #region Private/Protected Member Variables
+            return Encrypt<AesManaged>(value, password);
+        }
+        public static string Encrypt<T>(string value, string password)
+                where T : SymmetricAlgorithm, new()
+        {
+            byte[] vectorBytes = ASCIIEncoding.ASCII.GetBytes(_vector);
+            byte[] saltBytes = ASCIIEncoding.ASCII.GetBytes(_salt);
+            byte[] valueBytes = UTF8Encoding.UTF8.GetBytes(value);
 
-            /// <summary>
-            /// Decryptor
-            /// 
-            private readonly ICryptoTransform _decryptor;
-
-            /// <summary>
-            /// Encryptor
-            /// 
-            private readonly ICryptoTransform _encryptor;
-
-            /// <summary>
-            /// 16-byte Private Key
-            /// 
-            private static readonly byte[] IV = Encoding.UTF8.GetBytes("Asi@15Uy1ps2$ebt");
-
-            /// <summary>
-            /// Public Key
-            /// 
-            private readonly byte[] _password;
-
-            /// <summary>
-            /// Rijndael cipher algorithm
-            /// 
-            private readonly RijndaelManaged _cipher;
-
-            #endregion
-
-            #region Private/Protected Properties
-
-            private ICryptoTransform Decryptor { get { return _decryptor; } }
-            private ICryptoTransform Encryptor { get { return _encryptor; } }
-
-            #endregion
-
-            #region Private/Protected Methods
-            #endregion
-
-            #region Constructor
-
-            /// <summary>
-            /// Constructor
-            /// 
-            /// <param name="password">Public key
-            public MEX(string password)
+            byte[] encrypted;
+            using (T cipher = new T())
             {
-                //Encode digest
-                var md5 = new MD5CryptoServiceProvider();
-                _password = md5.ComputeHash(Encoding.ASCII.GetBytes(password));
+                PasswordDeriveBytes _passwordBytes =
+                    new PasswordDeriveBytes(password, saltBytes, _hash, _iterations);
+                byte[] keyBytes = _passwordBytes.GetBytes(_keySize / 8);
 
-                //Initialize objects
-                _cipher = new RijndaelManaged();
-                _decryptor = _cipher.CreateDecryptor(_password, IV);
-                _encryptor = _cipher.CreateEncryptor(_password, IV);
+                cipher.Mode = CipherMode.CBC;
 
+                using (ICryptoTransform encryptor = cipher.CreateEncryptor(keyBytes, vectorBytes))
+                {
+                    using (MemoryStream to = new MemoryStream())
+                    {
+                        using (CryptoStream writer = new CryptoStream(to, encryptor, CryptoStreamMode.Write))
+                        {
+                            writer.Write(valueBytes, 0, valueBytes.Length);
+                            writer.FlushFinalBlock();
+                            encrypted = to.ToArray();
+                        }
+                    }
+                }
+                cipher.Clear();
             }
+            return Convert.ToBase64String(encrypted);
+        }
 
-            #endregion
+        public static string Decrypt(string value, string password)
+        {
+            return Decrypt<AesManaged>(value, password);
+        }
+        public static string Decrypt<T>(string value, string password) where T : SymmetricAlgorithm, new()
+        {
+            byte[] vectorBytes = ASCIIEncoding.ASCII.GetBytes(_vector);
+            byte[] saltBytes = ASCIIEncoding.ASCII.GetBytes(_salt);
+            byte[] valueBytes = Convert.FromBase64String(value);
 
-            #region Public Properties
-            #endregion
+            byte[] decrypted;
+            int decryptedByteCount = 0;
 
-            #region Public Methods
-
-            /// <summary>
-            /// Decryptor
-            /// 
-            /// <param name="text">Base64 string to be decrypted
-            /// <returns>
-            public string Decrypt(string text)
+            using (T cipher = new T())
             {
+                PasswordDeriveBytes _passwordBytes = new PasswordDeriveBytes(password, saltBytes, _hash, _iterations);
+                byte[] keyBytes = _passwordBytes.GetBytes(_keySize / 8);
+
+                cipher.Mode = CipherMode.CBC;
+
                 try
                 {
-                    byte[] input = Convert.FromBase64String(text);
-
-                    var newClearData = Decryptor.TransformFinalBlock(input, 0, input.Length);
-                    return Encoding.ASCII.GetString(newClearData);
+                    using (ICryptoTransform decryptor = cipher.CreateDecryptor(keyBytes, vectorBytes))
+                    {
+                        using (MemoryStream from = new MemoryStream(valueBytes))
+                        {
+                            using (CryptoStream reader = new CryptoStream(from, decryptor, CryptoStreamMode.Read))
+                            {
+                                decrypted = new byte[valueBytes.Length];
+                                decryptedByteCount = reader.Read(decrypted, 0, decrypted.Length);
+                            }
+                        }
+                    }
                 }
-                catch (ArgumentException ae)
+                catch (Exception ex)
                 {
-                    Console.WriteLine("inputCount uses an invalid value or inputBuffer has an invalid offset length. " + ae);
-                    return null;
-                }
-                catch (ObjectDisposedException oe)
-                {
-                    Console.WriteLine("The object has already been disposed." + oe);
-                    return null;
+                    return String.Empty;
                 }
 
-
+                cipher.Clear();
             }
-
-            /// <summary>
-            /// Encryptor
-            /// 
-            /// <param name="text">String to be encrypted
-            /// <returns>
-            public string Encrypt(string text)
-            {
-                try
-                {
-                    var buffer = Encoding.ASCII.GetBytes(text);
-                    return Convert.ToBase64String(Encryptor.TransformFinalBlock(buffer, 0, buffer.Length));
-                }
-                catch (ArgumentException ae)
-                {
-                    Console.WriteLine("inputCount uses an invalid value or inputBuffer has an invalid offset length. " + ae);
-                    return null;
-                }
-                catch (ObjectDisposedException oe)
-                {
-                    Console.WriteLine("The object has already been disposed." + oe);
-                    return null;
-                }
-
-            }
-
-            #endregion
+            return Encoding.UTF8.GetString(decrypted, 0, decryptedByteCount);
         }
-        }
+
     }
+}
