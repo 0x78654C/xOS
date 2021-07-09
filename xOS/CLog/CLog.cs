@@ -9,7 +9,7 @@ namespace xOS.CLog
     public class CLog
     {
         private static string SysLogFile= FileSystem.GVariables.SYSLogFile;
-        public static void SysLog_LoadOS()
+        public static void SysLog_LoadOS(string logData)
         {
             if (File.Exists(SysLogFile))
             {
@@ -19,7 +19,7 @@ namespace xOS.CLog
                 string h = RTC.Hour.ToString();
                 string m = RTC.Minute.ToString();
                 string s = RTC.Second.ToString();
-                File.AppendAllText(SysLogFile, $"[{d}-{mo}-{y} {h}:{m}:{s}] System loaded \n");
+                File.AppendAllText(SysLogFile, $"[{d}-{mo}-{y} {h}:{m}:{s}] {logData} \n");
             }
             else
             {
