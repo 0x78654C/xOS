@@ -16,21 +16,28 @@ namespace xOS
         private static int LoggedStatus = 0;
         private static string uLogin = string.Empty;
         private static string User = string.Empty;
+
+        /// <summary>
+        /// Before run the main shell
+        /// </summary>
         protected override void BeforeRun()
         {
             Console.WriteLine("xOS booted successfully. Type a line of text to get it echoed back.");
-            Root.Create_Root();
-            Root.Initialize_Sys_Dirs();
-            CLog.CLog.SysLog_LoadOS("System loaded");
+            Root.Create_Root();                              //loading partitions and file system
+            Root.Initialize_Sys_Dirs();                      //initialiaze the system structure creation 
+            CLog.CLog.SysLog_LoadOS("System loaded");        //storing information in log when system is succesfully started - includes datetime
             Console.Clear();
         }
 
+        /// <summary>
+        /// Main shell
+        /// </summary>
         protected override void Run()
         {
-
+            //logins system initialize
             if (LoggedStatus == 0)
             {
-                uLogin = Root.UserLogin();
+                uLogin = Users.UserLogin();
                 if (uLogin.Contains("logged"))
                 {
                     User = uLogin.Split('|')[1];
