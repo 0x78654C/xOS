@@ -10,38 +10,33 @@ namespace xOS.Commnads
         {
 
             #region Files Section
-            //create file
+            //create file in a certain path or root folder
             if (input.StartsWith("mkfile"))
             {
                 File.CreateFile(input);
             }
 
-            //delete file
+            //delete file in a certain path or root folder
             if (input.StartsWith("rf"))
             {
                 File.DeleteFile(input);
             }
 
-            //read file
+            //read file from a certain path or root folder
             if (input.StartsWith("cat"))
             {
                 File.Read_File(input);
             }
 
-            //write to file
+            //writes data to file in a certain path or root folder with overwrite
             if (input.StartsWith("wf"))
             {
                 File.Write_To_File(input);
             }
 
-            //append to file with type
-            if (input.StartsWith("af"))
-            {
-                File.Append_To_File(input);
-            }
 
-            //append to file
-            if (input.StartsWith("afx"))
+            //append data to file in a certain path or root folder
+            if (input.StartsWith("af"))
             {
                 File.Append_To_File2(input);
             }
