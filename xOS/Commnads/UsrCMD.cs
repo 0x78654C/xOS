@@ -13,6 +13,7 @@ namespace xOS.Commnads
         {
 
             //create user commnad
+            //example: cuser username password
             if (input.StartsWith("cuser"))
             {
                 try
