@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading;
 using xOS.FileSystem;
 
 namespace xOS.Commnads
@@ -29,6 +30,22 @@ namespace xOS.Commnads
             {
                 Console.Clear();
                 Console.WriteLine("--------------------Welcome to xOS----------------------");
+            }
+
+            if(input == "shutdown")
+            {
+                Console.WriteLine("xOS is shuting down!");
+                CLog.CLog.SysLog_LoadOS("xOS is shuting down!");
+                Thread.Sleep(1500);
+                Cosmos.System.Power.Shutdown();
+            }
+
+            if (input == "reboot")
+            {
+                Console.WriteLine("xOS is restarting!");
+                CLog.CLog.SysLog_LoadOS("xOS is restarting!");
+                Thread.Sleep(1500);
+                Cosmos.System.Power.Reboot();
             }
         }
     }
