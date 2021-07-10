@@ -25,88 +25,56 @@ namespace xOS.FileSystem
             fs = new Sys.FileSystem.CosmosVFS();
             Sys.FileSystem.VFS.VFSManager.RegisterVFS(fs);
         }
-        
-        //login system
-        public static string UserLogin()
-        {
 
-            Console.WriteLine("--Login--");
-            Console.Write("UserName: ");
-            string user = Console.ReadLine();
-            string o=string.Empty;
-            try
-            {
-                string[] UserFileRead;
-                if (System.IO.File.Exists(UsrFile))
-                {
-                    UserFileRead = System.IO.File.ReadAllLines(UsrFile);
-                    foreach(var User in UserFileRead)
-                    {
-                        if (User.Split('|')[0] == user)
-                        {
-                            string UserP = User.Split('|')[1];
-                            Console.Write("Password: ");
-                            string pass = Console.ReadLine();
 
-                            if (pass != UserP)
-                            {
-                                Console.WriteLine("Wrong passwsord!");
-                                o = "Wrong passwsord!";
-                            }
-                            else
-                            {
-                                o = $"logged|{User}";
-                                CLog.CLog.SysLog_LoadOS($"User: {user} logged");
-                            }
-                        }
-                        else
-                        {
-                            o = $"User {user} dose not exist!";
-                        }
-                    }
-                }
-            }
-            catch(Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-            if(o.Contains("dose not exist"))
-            {
-                Console.WriteLine($"User {user} dose not exist!");
-            }
-            return o;
-        }
+        /// <summary>
+        /// We create the system directories and files structure
+        /// 0:\Sys\
+        /// 0:\Sys\Log\
+        /// 0:\Sys\Usr\
+        /// 0:\Sys\User\usr.u - for users store
+        /// 0:\Sys\Log\logSYS.l - for system logs store
+        /// </summary>
         public static void Initialize_Sys_Dirs()
         {
             Console.WriteLine("Loading system...");
+            //initialize 'Sys' directory
             if (!System.IO.Directory.Exists(SysDir))
             {
                 System.IO.Directory.CreateDirectory(SysDir);
                 Console.WriteLine($"Created {SysDir} directory!");
             }
 
+            //initialize 'Usr' directory
             if (!System.IO.Directory.Exists(UsrDir))
             {
                 System.IO.Directory.CreateDirectory(UsrDir);
                 Console.WriteLine($"Created {UsrDir} directory!");
             }
 
-            if (!System.IO.Directory.Exists(UsrFile))
-            {
-                System.IO.Directory.CreateDirectory(UsrFile);
-                Console.WriteLine($"Created {UsrFile} directory!");
-            }
-
+            //initialize 'Log' directory
             if (!System.IO.Directory.Exists(LogDir))
             {
                 System.IO.Directory.CreateDirectory(LogDir);
                 Console.WriteLine($"Created {LogDir} directory!");
             }
 
+            //initialize 'logSYS.l' file
             if (!System.IO.File.Exists(SYSLogFile))
             {
                 System.IO.File.Create(SYSLogFile);
                 Console.WriteLine($"Created {SYSLogFile} file!");
+            }
+                
+            // initialize 'usr.u' file
+            if (!System.IO.File.Exists(UsrFile))
+            {
+                System.IO.File.Create(UsrFile);
+                Console.WriteLine($"Created {UsrFile} file!");
+                Console.Clear();
+
+                //initiliaze first user account creation on first run
+                Users.Initilize_First_User();
             }
         }
         public static void Test_Root()
@@ -122,7 +90,7 @@ namespace xOS.FileSystem
                 Console.WriteLine(System.IO.Path.GetFileName(path));
             }
             foreach (var d in System.IO.Directory.GetDirectories(@"0:\"))
-           {
+            {
                 var dir = new DirectoryInfo(d);
                 var dirName = dir.Name;
 
@@ -136,7 +104,7 @@ namespace xOS.FileSystem
         public static void Test_Root(string PathDir)
         {
             string Pd = System.IO.Directory.GetCurrentDirectory() + "\\" + PathDir;
-            string[] filePaths = System.IO.Directory.GetFiles(System.IO.Directory.GetCurrentDirectory()+"\\"+Pd);
+            string[] filePaths = System.IO.Directory.GetFiles(System.IO.Directory.GetCurrentDirectory() + "\\" + Pd);
 
             for (int i = 0; i < filePaths.Length; ++i)
             {
@@ -155,7 +123,7 @@ namespace xOS.FileSystem
 
         public static void Open_Directory()
         {
-//future work
+            //future work
         }
     }
 }
