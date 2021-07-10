@@ -101,36 +101,6 @@ namespace xOS.FileSystem
             }
         }
 
-        public static void Append_To_File(string input)
-        {
-            try
-            {
-                string Fn = input.Split(' ')[1];
-                Console.Write("Type: ");
-                string Data = Console.ReadLine();
-                Console.WriteLine(Data);
-                var hello_file = Sys.FileSystem.VFS.VFSManager.GetFile(@Fn);
-                if (System.IO.File.Exists(@Fn))
-                {
-                    var hello_file_stream = hello_file.GetFileStream();
-                    var read_file = System.IO.File.ReadAllText(@Fn);
-
-                    if (hello_file_stream.CanWrite)
-                    {
-                        System.IO.File.WriteAllText(@Fn, read_file + Data);
-                    }
-                }
-                else
-                {
-                    Console.WriteLine($"File {Fn} dose not exist!");
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
-            }
-        }
-
         public static void Append_To_File2(string input)
         {
             try
