@@ -34,7 +34,7 @@ namespace xOS.FileSystem
                             Console.Write("User Password: ");
                             string pass = GetHiddenConsoleInput();
 
-                            if (pass != UserP)
+                            if (Cryptography.Encrypt(pass) != UserP)
                             {
                                 Console.WriteLine("Wrong passwsord!");
                                 o = "Wrong passwsord!";
@@ -46,10 +46,6 @@ namespace xOS.FileSystem
                                 Console.Clear();
                             }
                         }
-                        else
-                        {
-                            o = $"User {user} dose not exist!";
-                        }
                     }
                 }
             }
@@ -57,9 +53,11 @@ namespace xOS.FileSystem
             {
                 Console.WriteLine(e.Message);
             }
-            if (o.Contains("dose not exist"))
+
+            if(!o.Contains("logged") || !o.Contains("Wrong passwsord"))
             {
                 Console.WriteLine($"User {user} dose not exist!");
+               // o = $"User {user} dose not exist!";
             }
             return o;
         }
@@ -88,7 +86,7 @@ namespace xOS.FileSystem
                     }
                     else
                     {
-                        System.IO.File.AppendAllText(UsrFile, $"{UserName}|{UserPass}\n");
+                        System.IO.File.AppendAllText(UsrFile, $"{UserName}|{Cryptography.Encrypt(UserPass)}\n");
                         Console.WriteLine($"Created user: {UserName}");
                         CLog.CLog.SysLog_LoadOS($"Created user: {UserName}");
                     }
@@ -101,15 +99,7 @@ namespace xOS.FileSystem
 
         }
         //---------------------------------------------
-        public static string E_PWD(string data)
-        {
-            return Cryptography.Encrypt(data, "TestPass@!#!!@#12");
-        }
 
-        public static string D_PWD(string data)
-        {
-            return Cryptography.Decrypt(data, "TestPass@!#!!@#12");
-        }
         /// <summary>
         /// Hidding password imput for strings
         /// </summary>
