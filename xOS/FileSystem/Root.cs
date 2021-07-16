@@ -14,6 +14,9 @@ namespace xOS.FileSystem
         private static string SysDir = GVariables.SysDir;
         private static string UsrDir = GVariables.UsrDir;
         private static string LogDir = GVariables.LogDir;
+        private static string TmpDir = GVariables.TmpDir;
+        private static string cDirFile = GVariables.cDirFile;
+        private static string LoginFile = GVariables.LoginFile;
         private static string SYSLogFile = GVariables.SYSLogFile;
         private static string UsrFile = GVariables.UsrFile;
         //--------------------------
@@ -58,6 +61,30 @@ namespace xOS.FileSystem
                 System.IO.Directory.CreateDirectory(LogDir);
                 Console.WriteLine($"Created {LogDir} directory!");
             }
+            //initialize 'Tmp' directory
+            if (!System.IO.Directory.Exists(TmpDir))
+            {
+                System.IO.Directory.CreateDirectory(TmpDir);
+                Console.WriteLine($"Created {TmpDir} directory!");
+            }
+
+            //initialize 'Tmp' directory
+            if (!System.IO.Directory.Exists(TmpDir))
+            {
+                System.IO.Directory.CreateDirectory(TmpDir);
+                Console.WriteLine($"Created {TmpDir} directory!");
+            }
+
+            //initialize 'cDir.t' file
+            if (!System.IO.File.Exists(cDirFile))
+            {
+                System.IO.File.Create(cDirFile);
+                Console.WriteLine($"Created {cDirFile} file!");
+            }
+
+            //initialize 'login.t' file
+                System.IO.File.WriteAllText(LoginFile,"0");
+                Console.WriteLine($"Initialize {LoginFile} file!");
 
             //initialize 'logSYS.l' file
             if (!System.IO.File.Exists(SYSLogFile))
@@ -119,11 +146,6 @@ namespace xOS.FileSystem
                 Console.WriteLine(dirName + " <DIR>");
             }
             Console.WriteLine("\n");
-        }
-
-        public static void Open_Directory()
-        {
-            //future work
         }
     }
 }
