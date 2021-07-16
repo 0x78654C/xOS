@@ -13,10 +13,12 @@ namespace xOS
     public class Kernel : Sys.Kernel
     {
 
-        private static int LoggedStatus = 0;
+        public static string LoggedStatus = "0";
         private static string uLogin = string.Empty;
         private static string User = string.Empty;
-
+        private static string cDir = string.Empty;
+        private static string cDirFile = GVariables.cDirFile;
+        private static string LoginFile = GVariables.LoginFile;
         /// <summary>
         /// Before run the main shell
         /// </summary>
@@ -34,22 +36,31 @@ namespace xOS
         /// </summary>
         protected override void Run()
         {
-            //logins system initialize
-            if (LoggedStatus == 0)
+           // logins system initialize
+            LoggedStatus = System.IO.File.ReadAllText(LoginFile);
+            if (LoggedStatus == "0")
             {
                 uLogin = Users.UserLogin();
                 if (uLogin.Contains("logged"))
                 {
                     User = uLogin.Split('|')[1];
-                    LoggedStatus = 1;
+                    System.IO.File.WriteAllText(LoginFile, "1");
+                    Console.Clear();
                     Console.WriteLine("--------------------Welcome to xOS----------------------");
                     Console.WriteLine($"Welcome {User} ");
                 }
             }
             else
             {
-
-                Console.Write($"{User} $ ");
+                cDir = System.IO.File.ReadAllText(cDirFile);
+                if (!string.IsNullOrEmpty(cDir))
+                {
+                    Console.Write($"{User} ({cDir})$ ");
+                }
+                else
+                {
+                    Console.Write($"{User} $ ");
+                }
                 var input = Console.ReadLine();
 
                 //run System Commands
@@ -63,7 +74,7 @@ namespace xOS
 
                 //run User Managemenet commands
                 Commnads.UsrCMD.RunUserCMD(input);
-            }
+           }
         }
     }
 }
