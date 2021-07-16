@@ -11,7 +11,7 @@ namespace xOS.Commnads
 
             #region Files Section
             //create file in a certain path or root folder
-            if (input.StartsWith("mkfile"))
+            if (input.StartsWith("mf"))
             {
                 File.CreateFile(input);
             }
