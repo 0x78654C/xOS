@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using xOS.FileSystem;
+using Cosmos.HAL;
 
 namespace xOS.Commnads
 {
     public static class SytemCMD
     {
+        private static string cDirFile = GVariables.cDirFile;
+        private static string LoginFile = GVariables.LoginFile;
         public static void RunSysCMD(string input)
         {
 
@@ -32,6 +35,7 @@ namespace xOS.Commnads
                 Console.WriteLine("--------------------Welcome to xOS----------------------");
             }
 
+            //shutdown command... BETA
             if(input == "shutdown")
             {
                 Console.WriteLine("xOS is shuting down!");
@@ -40,12 +44,54 @@ namespace xOS.Commnads
                 Cosmos.System.Power.Shutdown();
             }
 
+            //system reboot command.. BETA
             if (input == "reboot")
             {
                 Console.WriteLine("xOS is restarting!");
                 CLog.CLog.SysLog_LoadOS("xOS is restarting!");
                 Thread.Sleep(1500);
                 Cosmos.System.Power.Reboot();
+            }
+
+            //current directory command
+            if (input.StartsWith("cd"))
+            {
+                try
+                {
+                    string DirPath = input.Split(' ')[1];
+
+                    if (System.IO.Directory.Exists(DirPath))
+                    {
+                        System.IO.File.WriteAllText(cDirFile, DirPath);
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Direcotry {DirPath} dose not exist!");
+                    }
+                }
+                catch 
+                {
+                    System.IO.File.WriteAllText(cDirFile, string.Empty);
+                }
+            }
+
+            //logout command
+            if (input.StartsWith("logout"))
+            {
+                System.IO.File.WriteAllText(LoginFile, "0");
+                Console.Clear();
+            }
+
+            //shout current time command
+            if (input == "time")
+            {
+                string d = RTC.DayOfTheMonth.ToString();
+                string y = RTC.Year.ToString();
+                string mo = RTC.Month.ToString();
+                string h = RTC.Hour.ToString();
+                string m = RTC.Minute.ToString();
+                string s = RTC.Second.ToString();
+                Console.WriteLine($"Date: {d}-{mo}-{y} / Time: {h}:{m}:{s}");
             }
         }
     }
