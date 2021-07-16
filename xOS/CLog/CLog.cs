@@ -9,6 +9,11 @@ namespace xOS.CLog
     public class CLog
     {
         private static string SysLogFile= FileSystem.GVariables.SYSLogFile;
+
+        /// <summary>
+        /// System Log store
+        /// </summary>
+        /// <param name="logData"></param>
         public static void SysLog_LoadOS(string logData)
         {
             if (File.Exists(SysLogFile))
