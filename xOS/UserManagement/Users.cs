@@ -9,7 +9,6 @@ namespace xOS.FileSystem
     {
 
         private static string UsrFile = GVariables.UsrFile;
-        private static int index = 0;
 
 
         //login system
@@ -20,6 +19,7 @@ namespace xOS.FileSystem
             Console.Write("User Name: ");
             string user = Console.ReadLine();
             string o = string.Empty;
+            bool exist = false;
             try
             {
                 string[] UserFileRead;
@@ -30,6 +30,7 @@ namespace xOS.FileSystem
                     {
                         if (User.Split('|')[0] == user)
                         {
+                            exist = true;
                             string UserP = User.Split('|')[1];
                             Console.Write("User Password: ");
                             string pass = GetHiddenConsoleInput();
@@ -54,10 +55,9 @@ namespace xOS.FileSystem
                 Console.WriteLine(e.Message);
             }
 
-            if(!o.Contains("logged") || !o.Contains("Wrong passwsord"))
+            if(exist==false)
             {
                 Console.WriteLine($"User {user} dose not exist!");
-               // o = $"User {user} dose not exist!";
             }
             return o;
         }
