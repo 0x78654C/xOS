@@ -24,11 +24,13 @@ namespace xOS
         /// </summary>
         protected override void BeforeRun()
         {
-            Console.WriteLine("xOS booted successfully. Type a line of text to get it echoed back.");
             Root.Create_Root();                              //loading partitions and file system
             Root.Initialize_Sys_Dirs();                      //initialiaze the system structure creation 
             CLog.CLog.SysLog_LoadOS("System loaded");        //storing information in log when system is succesfully started - includes datetime
             Console.Clear();
+            Console.WriteLine("=================================================================");
+            Console.WriteLine("=====================WELCOME TO xOS SYSTEM=======================");
+            Console.WriteLine("=================================================================\n");
         }
 
         /// <summary>
@@ -46,8 +48,7 @@ namespace xOS
                     User = uLogin.Split('|')[1];
                     System.IO.File.WriteAllText(LoginFile, "1");
                     Console.Clear();
-                    Console.WriteLine("--------------------Welcome to xOS----------------------");
-                    Console.WriteLine($"Welcome {User} ");
+                    Console.WriteLine($"--------------------Welcome to xOS, {User}. Enjoy your stay.----------------------");
                 }
             }
             else
@@ -74,6 +75,10 @@ namespace xOS
 
                 //run User Managemenet commands
                 Commnads.UsrCMD.RunUserCMD(input);
+
+                //run Help command
+                Commnads.HelpCMD.RunHelpCMD(input);
+
            }
         }
     }
