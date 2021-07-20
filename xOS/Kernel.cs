@@ -48,7 +48,7 @@ namespace xOS
                     User = uLogin.Split('|')[1];
                     System.IO.File.WriteAllText(LoginFile, "1");
                     Console.Clear();
-                    Console.WriteLine($"--------------------Welcome to xOS, {User}. Enjoy your stay.----------------------");
+                    Console.WriteLine($"-------------- Welcome to xOS, {User}. Enjoy your stay. -------------- ");
                 }
             }
             else
