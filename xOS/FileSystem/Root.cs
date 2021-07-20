@@ -12,6 +12,7 @@ namespace xOS.FileSystem
         //declare global variables
         private static string SysVol = GVariables.SysVol;
         private static string SysDir = GVariables.SysDir;
+        private static string UsersDir = GVariables.UsersDir;
         private static string UsrDir = GVariables.UsrDir;
         private static string LogDir = GVariables.LogDir;
         private static string TmpDir = GVariables.TmpDir;
@@ -35,8 +36,12 @@ namespace xOS.FileSystem
         /// 0:\Sys\
         /// 0:\Sys\Log\
         /// 0:\Sys\Usr\
-        /// 0:\Sys\User\usr.u - for users store
+        /// 0:\Sys\User\usr.u - for users login data store
         /// 0:\Sys\Log\logSYS.l - for system logs store
+        /// 0:\Tmp\
+        /// 0:\Tmp\cDir.t - Stores current directory used by 'cd' command
+        /// 0:\Tmp\loing.t - Stores login state. 1 - loged in, 0 - loged out
+        /// 0:\Users\
         /// </summary>
         public static void Initialize_Sys_Dirs()
         {
@@ -46,6 +51,13 @@ namespace xOS.FileSystem
             {
                 System.IO.Directory.CreateDirectory(SysDir);
                 Console.WriteLine($"Created {SysDir} directory!");
+            }
+
+            //initialize 'Users' directory
+            if (!System.IO.Directory.Exists(UsersDir))
+            {
+                System.IO.Directory.CreateDirectory(UsersDir);
+                Console.WriteLine($"Created {UsersDir} directory!");
             }
 
             //initialize 'Usr' directory
