@@ -23,7 +23,7 @@ namespace xOS.Commnads
             }
 
             //read file from a certain path or root folder
-            if (input.StartsWith("cat"))
+            if (input.StartsWith("df"))
             {
                 File.Read_File(input);
             }
