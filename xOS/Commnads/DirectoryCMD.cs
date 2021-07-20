@@ -16,7 +16,7 @@ namespace xOS.Commnads
             }
 
             //delete directory
-            if (input.StartsWith("rd"))
+            if (input.StartsWith("rmdir"))
             {
                 FileSystem.Directory.DeleteDir(input);
             }
