@@ -2,7 +2,7 @@
 ## Info 
 Whatch this be made on twich on [x_coding](https://www.twitch.tv/x_coding)'s channel\
 A operating system in C# based on Cosmos Kernel\
-To see commands type help for command list and information about that command
+For xOS command list just type help in console
 ## Requirements
 Make sure you have:
 >[Visual Studio 2019](https://visualstudio.microsoft.com/downloads/)\
