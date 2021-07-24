@@ -196,7 +196,7 @@ namespace xOS.FileSystem
             }
             else
             {
-                Console.WriteLine($"Directory {PathDir} dose not exist!");
+                Console.WriteLine($"Directory {PathDir} does not exist!");
             }
         }
     }
