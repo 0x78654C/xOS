@@ -30,7 +30,7 @@ namespace xOS.FileSystem
                 }
                 else
                 {
-                    Sys.FileSystem.VFS.VFSManager.CreateFile(cDir+@"\"+FileName);
+                    Sys.FileSystem.VFS.VFSManager.CreateFile(cDir + @"\" + FileName);
                     Console.WriteLine($"File {FileName} was created!");
                 }
             }
@@ -57,7 +57,7 @@ namespace xOS.FileSystem
                 }
                 else
                 {
-                    File.Delete(cDir+@"\"+FileName);
+                    File.Delete(cDir + @"\" + FileName);
                     Console.WriteLine($"File {FileName} was deleted!");
                 }
             }
@@ -78,7 +78,7 @@ namespace xOS.FileSystem
             {
                 FileName = FileName.Split(' ')[1];
                 string cDir = File.ReadAllText(cDirFile);
-                if(string.IsNullOrEmpty(cDir) && FileName.Contains(@"0:\"))
+                if (string.IsNullOrEmpty(cDir) && FileName.Contains(@"0:\"))
                 {
                     if (File.Exists(FileName))
                     {
@@ -93,9 +93,10 @@ namespace xOS.FileSystem
                     }
                     else
                     {
-                        Console.WriteLine($"FIle {FileName} dose not exit!");
+                        Console.WriteLine($"FIle {FileName} does not exit!");
                     }
-                }else
+                }
+                else
                 {
                     FileName = cDir + @"\" + FileName;
                     if (File.Exists(FileName))
@@ -111,7 +112,7 @@ namespace xOS.FileSystem
                     }
                     else
                     {
-                        Console.WriteLine($"FIle {FileName} dose not exit!");
+                        Console.WriteLine($"FIle {FileName} does not exit!");
                     }
                 }
             }
@@ -149,7 +150,7 @@ namespace xOS.FileSystem
                     }
                     else
                     {
-                        Console.WriteLine($"File {FileName} dose not exist!");
+                        Console.WriteLine($"File {FileName} does not exist!");
                     }
                 }
                 else
@@ -170,7 +171,7 @@ namespace xOS.FileSystem
                     }
                     else
                     {
-                        Console.WriteLine($"File {FileName} dose not exist!");
+                        Console.WriteLine($"File {FileName} does not exist!");
                     }
                 }
             }
@@ -206,7 +207,7 @@ namespace xOS.FileSystem
                     }
                     else
                     {
-                        Console.WriteLine($"File {Fn} dose not exist!");
+                        Console.WriteLine($"File {Fn} does not exist!");
                     }
                 }
                 else
@@ -225,7 +226,7 @@ namespace xOS.FileSystem
                     }
                     else
                     {
-                        Console.WriteLine($"File {Fn} dose not exist!");
+                        Console.WriteLine($"File {Fn} does not exist!");
                     }
                 }
             }
