@@ -13,16 +13,15 @@ namespace xOS.Commnads
             //make new directory
             if (input.StartsWith("mkdir"))
             {
-                FileSystem.Directory.CreateDir(input);
+                FileSystem.DirectoryM.CreateDir(input);
             }
 
             //delete directory
             if (input.StartsWith("rmdir"))
             {
-                FileSystem.Directory.DeleteDir(input);
+                FileSystem.DirectoryM.DeleteDir(input);
             }
             #endregion
-
         }
     }
 }
