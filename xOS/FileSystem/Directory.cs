@@ -1,19 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Sys = Cosmos.System;
+using System.IO;
 
 namespace xOS.FileSystem
 {
    public static class Directory
     {
+        private static string cDirFile = GVariables.cDirFile; //current directory location
+        
+        /// <summary>
+        /// Creates a directory. Command: mkdir
+        /// </summary>
+        /// <param name="DirName">The directory name</param>
         public static void CreateDir(string DirName)
         {
             try
             {
+                string cDir = File.ReadAllText(cDirFile);
                 DirName = DirName.Split(' ')[1];
-                Sys.FileSystem.VFS.VFSManager.CreateDirectory(DirName);
-                Console.WriteLine($"Directory {DirName} was created!");
+
+                if (!string.IsNullOrEmpty(cDir) && !DirName.Contains(@":\"))
+                {
+                    System.IO.Directory.CreateDirectory(cDir+@"\"+DirName);
+                    Console.WriteLine($"Directory {cDir + @"\" + DirName} was created!");
+                }
+                else
+                {
+                    System.IO.Directory.CreateDirectory(DirName);
+                    Console.WriteLine($"Directory {DirName} was created!");
+                }
+
             }
             catch (Exception e)
             {
@@ -21,13 +36,28 @@ namespace xOS.FileSystem
             }
         }
 
+        /// <summary>
+        /// Delete recursevly a directory. Command: rmdir
+        /// </summary>
+        /// <param name="DirName">The directory name</param>
         public static void DeleteDir(string DirName)
         {
             try
             {
+                string cDir = File.ReadAllText(cDirFile);
                 DirName = DirName.Split(' ')[1];
-                Sys.FileSystem.VFS.VFSManager.DeleteDirectory(DirName,true);
-                Console.WriteLine($"Directory {DirName} was deleted!");
+
+                if (!string.IsNullOrEmpty(cDir) && !DirName.Contains(@":\"))
+                {
+                    System.IO.Directory.Delete(cDir + @"\" + DirName,true);
+                    Console.WriteLine($"Directory {cDir + @"\" + DirName} was deleted!");
+                }
+                else
+                {
+                    System.IO.Directory.Delete(DirName);
+                    Console.WriteLine($"Directory {DirName} was deleted!");
+                }
+
             }
             catch (Exception e)
             {
