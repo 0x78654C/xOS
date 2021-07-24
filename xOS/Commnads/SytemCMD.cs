@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
+using System.IO;
 using xOS.FileSystem;
 using Cosmos.HAL;
 
@@ -11,6 +12,8 @@ namespace xOS.Commnads
     {
         private static string cDirFile = GVariables.cDirFile;
         private static string LoginFile = GVariables.LoginFile;
+        private static string dLetter = @"0:\";
+
         public static void RunSysCMD(string input)
         {
 
@@ -41,8 +44,8 @@ namespace xOS.Commnads
                 Console.WriteLine("xOS is shuting down!");
                 CLog.CLog.SysLog_LoadOS("xOS is shuting down!");
                 Thread.Sleep(1500);
-                Cosmos.System.Power.Shutdown();
-            }
+                Power.ACPIShutdown();
+            } 
 
             //system reboot command.. BETA
             if (input == "reboot")
@@ -50,7 +53,7 @@ namespace xOS.Commnads
                 Console.WriteLine("xOS is restarting!");
                 CLog.CLog.SysLog_LoadOS("xOS is restarting!");
                 Thread.Sleep(1500);
-                Cosmos.System.Power.Reboot();
+                Power.ACPIReboot();
             }
 
             //current directory command
@@ -59,26 +62,56 @@ namespace xOS.Commnads
                 try
                 {
                     string DirPath = input.Split(' ')[1];
+                    string DirPathSaved = File.ReadAllText(cDirFile);
 
-                    if (System.IO.Directory.Exists(DirPath))
+                    if (string.IsNullOrEmpty(DirPathSaved))
                     {
-                        System.IO.File.WriteAllText(cDirFile, DirPath);
+
+                        if (System.IO.Directory.Exists(DirPath))
+                        {
+                            if (DirPath.Contains(dLetter))
+                            {
+                                File.WriteAllText(cDirFile, DirPath);
+                            }
+                            else
+                            {
+                                File.WriteAllText(cDirFile,dLetter + DirPath);
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Direcotry {DirPath} dose not exist!");
+                        }
                     }
                     else
                     {
-                        Console.WriteLine($"Direcotry {DirPath} dose not exist!");
+                        if (System.IO.Directory.Exists(DirPathSaved + @"\" + DirPath))
+                        {
+                            if (DirPath.Contains(dLetter))
+                            {
+                                File.WriteAllText(cDirFile, DirPath);
+                            }
+                            else
+                            {
+                                File.WriteAllText(cDirFile, DirPathSaved +@"\"+ DirPath);
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Direcotry {DirPath} dose not exist!");
+                        }
                     }
                 }
                 catch 
                 {
-                    System.IO.File.WriteAllText(cDirFile, string.Empty);
+                    File.WriteAllText(cDirFile, string.Empty);
                 }
             }
 
-            //logout command
+            //logout the current users command
             if (input.StartsWith("logout"))
             {
-                System.IO.File.WriteAllText(LoginFile, "0");
+                File.WriteAllText(LoginFile, "0");
                 Console.Clear();
             }
 
