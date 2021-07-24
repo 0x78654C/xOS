@@ -13,32 +13,32 @@ namespace xOS.Commnads
             //create file in a certain path or root folder
             if (input.StartsWith("mf"))
             {
-                File.CreateFile(input);
+                FileM.CreateFile(input);
             }
 
             //delete file in a certain path or root folder
             if (input.StartsWith("rf"))
             {
-                File.DeleteFile(input);
+                FileM.DeleteFile(input);
             }
 
             //read file from a certain path or root folder
             if (input.StartsWith("df"))
             {
-                File.Read_File(input);
+                FileM.Read_File(input);
             }
 
             //writes data to file in a certain path or root folder with overwrite
             if (input.StartsWith("wf"))
             {
-                File.Write_To_File(input);
+                FileM.Write_To_File(input);
             }
 
 
             //append data to file in a certain path or root folder
             if (input.StartsWith("af"))
             {
-                File.Append_To_File2(input);
+                FileM.Append_To_File(input);
             }
             #endregion
 
