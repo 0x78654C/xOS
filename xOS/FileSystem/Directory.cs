@@ -1,9 +1,10 @@
 ﻿using System;
 using System.IO;
+using fs = Cosmos.System;
 
 namespace xOS.FileSystem
 {
-   public static class Directory
+   public static class DirectoryM
     {
         private static string cDirFile = GVariables.cDirFile; //current directory location
         
@@ -20,12 +21,12 @@ namespace xOS.FileSystem
 
                 if (!string.IsNullOrEmpty(cDir) && !DirName.Contains(@":\"))
                 {
-                    System.IO.Directory.CreateDirectory(cDir+@"\"+DirName);
+                    Directory.CreateDirectory(cDir+@"\"+DirName);
                     Console.WriteLine($"Directory {cDir + @"\" + DirName} was created!");
                 }
                 else
                 {
-                    System.IO.Directory.CreateDirectory(DirName);
+                    Directory.CreateDirectory(DirName);
                     Console.WriteLine($"Directory {DirName} was created!");
                 }
 
@@ -49,12 +50,12 @@ namespace xOS.FileSystem
 
                 if (!string.IsNullOrEmpty(cDir) && !DirName.Contains(@":\"))
                 {
-                    System.IO.Directory.Delete(cDir + @"\" + DirName,true);
+                    Directory.Delete(cDir + @"\" + DirName, true);
                     Console.WriteLine($"Directory {cDir + @"\" + DirName} was deleted!");
                 }
                 else
                 {
-                    System.IO.Directory.Delete(DirName);
+                    Directory.Delete(DirName);
                     Console.WriteLine($"Directory {DirName} was deleted!");
                 }
 
