@@ -23,9 +23,9 @@ namespace xOS.FileSystem
             try
             {
                 string[] UserFileRead;
-                if (System.IO.File.Exists(UsrFile))
+                if (File.Exists(UsrFile))
                 {
-                    UserFileRead = System.IO.File.ReadAllLines(UsrFile);
+                    UserFileRead = File.ReadAllLines(UsrFile);
                     foreach (var User in UserFileRead)
                     {
                         if (User.Split('|')[0] == user)
@@ -62,22 +62,27 @@ namespace xOS.FileSystem
             return o;
         }
 
+        /// <summary>
+        /// Initialize the os for creating the new us
+        /// </summary>
         public static void Initilize_First_User()
         {
-    
             try
             {
                 Console.WriteLine("Welcome to xOS. To use this operating system you need to create first a local account. \n");
                 Console.Write("User Name: ");
                 string UserName = Console.ReadLine();
+                Console.Write("User Type (a - Administrator, u - Normal User): ");
+                string UserType = Console.ReadLine();
                 Console.Write("User Password: ");
                 string UserPass = GetHiddenConsoleInput();
+                Console.WriteLine("\n");
                 string UsrFileRead;
 
                 //we check if user file exists
-                if (System.IO.File.Exists(UsrFile))
+                if (File.Exists(UsrFile))
                 {
-                    UsrFileRead = System.IO.File.ReadAllText(UsrFile);
+                    UsrFileRead = File.ReadAllText(UsrFile);
 
                     //we check if user exists in file
                     if (UsrFileRead.Contains(UserName))
@@ -86,7 +91,7 @@ namespace xOS.FileSystem
                     }
                     else
                     {
-                        System.IO.File.AppendAllText(UsrFile, $"{UserName}|{Cryptography.Encrypt(UserPass)}\n");
+                        File.AppendAllText(UsrFile, $"{UserName}|{Cryptography.Encrypt(UserPass)}|{UserType}\n");
                         Console.WriteLine($"Created user: {UserName}");
                         CLog.CLog.SysLog_LoadOS($"Created user: {UserName}");
                     }
@@ -104,7 +109,7 @@ namespace xOS.FileSystem
         /// Hidding password imput for strings
         /// </summary>
         /// <returns></returns>
-        private static string GetHiddenConsoleInput()
+        public static string GetHiddenConsoleInput()
         {
             StringBuilder input = new StringBuilder();
             while (true)
