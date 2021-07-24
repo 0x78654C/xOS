@@ -80,7 +80,7 @@ namespace xOS.Commnads
                         }
                         else
                         {
-                            Console.WriteLine($"Direcotry {DirPath} dose not exist!");
+                            Console.WriteLine($"Direcotry {DirPath} does not exist!");
                         }
                     }
                     else
@@ -98,7 +98,7 @@ namespace xOS.Commnads
                         }
                         else
                         {
-                            Console.WriteLine($"Direcotry {DirPath} dose not exist!");
+                            Console.WriteLine($"Direcotry {DirPath} does not exist!");
                         }
                     }
                 }
