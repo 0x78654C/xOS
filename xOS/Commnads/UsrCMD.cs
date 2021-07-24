@@ -14,19 +14,24 @@ namespace xOS.Commnads
         {
 
             //create user commnad
-            //example: cuser username password
+            //example: cuser username password usertyp(a - administrarot, u - normal user)
             if (input.StartsWith("cuser"))
             {
                 try
                 {
-                    string UserName = input.Split(' ')[1];
-                    string UserPass = input.Split(' ')[2];
+                    Console.Write("User Name: ");
+                    string UserName = Console.ReadLine();
+                    Console.Write("User Type (a - Administrator, u - Normal User): ");
+                    string UserType = Console.ReadLine();
+                    Console.Write("User Password: ");
+                    string UserPass = Users.GetHiddenConsoleInput();
+                    Console.WriteLine("\n");
                     string UsrFileRead;
 
                     //we check if user file exists
-                    if (System.IO.File.Exists(UsrFile))
+                    if (File.Exists(UsrFile))
                     {
-                        UsrFileRead = System.IO.File.ReadAllText(UsrFile);
+                        UsrFileRead = File.ReadAllText(UsrFile);
 
                         //we check if user exists in file
                         if (UsrFileRead.Contains(UserName))
@@ -35,7 +40,7 @@ namespace xOS.Commnads
                         }
                         else
                         {
-                            System.IO.File.AppendAllText(UsrFile, $"{UserName}|{Cryptography.Encrypt(UserPass)}\n");
+                            File.AppendAllText(UsrFile, $"{UserName}|{Cryptography.Encrypt(UserPass)}|{UserType}\n");
                             Console.WriteLine($"Created user: {UserName}");
                             CLog.CLog.SysLog_LoadOS($"Created user: {UserName}");
                         }
@@ -43,9 +48,9 @@ namespace xOS.Commnads
                     else
                     {
                         //we initialize the users file
-                        System.IO.File.Create(UsrFile);
+                        File.Create(UsrFile);
                         CLog.CLog.SysLog_LoadOS($"Users file (usr.u) is initialized!");
-                        UsrFileRead = System.IO.File.ReadAllText(UsrFile);
+                        UsrFileRead = File.ReadAllText(UsrFile);
 
                         //we check if user exists in file
                         if (UsrFileRead.Contains(UserName))
@@ -54,7 +59,7 @@ namespace xOS.Commnads
                         }
                         else
                         {
-                            System.IO.File.AppendAllText(UsrFile, $"{UserName}|{UserPass}\n");
+                            File.AppendAllText(UsrFile, $"{UserName}|{Cryptography.Encrypt(UserPass)}|{UserType}\n");
                             Console.WriteLine($"Created user: {UserName}");
                             CLog.CLog.SysLog_LoadOS($"Created user: {UserName}");
                         }
@@ -74,11 +79,11 @@ namespace xOS.Commnads
             {
                 try
                 {
-                    if (System.IO.File.Exists(UsrFile))
+                    if (File.Exists(UsrFile))
                     {
                         string dUser = input.Split(' ')[1];
                         string uList = string.Empty;
-                        var ReadUsers = System.IO.File.ReadAllLines(UsrFile);
+                        var ReadUsers = File.ReadAllLines(UsrFile);
                         foreach(var User in ReadUsers)
                         {
                             if (!User.Contains(dUser) && User.Length > 0)
@@ -86,7 +91,7 @@ namespace xOS.Commnads
                                 uList += User+Environment.NewLine;
                             }
                         }
-                        System.IO.File.WriteAllText(UsrFile, uList);
+                        File.WriteAllText(UsrFile, uList);
                         CLog.CLog.SysLog_LoadOS($"User {dUser} was deleted!");
                         Console.WriteLine($"User {dUser} was deleted!");
                     }
