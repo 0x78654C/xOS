@@ -40,13 +40,14 @@ namespace xOS
         {
             // logins system initialize
             LoggedStatus = File.ReadAllText(LoginFile);
+            LoggedStatus = LoggedStatus.Split('|')[0];
             if (LoggedStatus == "0")
             {
                 uLogin = Users.UserLogin();
                 if (uLogin.Contains("logged"))
                 {
                     User = uLogin.Split('|')[1];
-                    File.WriteAllText(LoginFile, "1");
+                    File.WriteAllText(LoginFile, $"1|{User}");
                     Console.Clear();
                     Console.WriteLine($"-------------- Welcome to xOS, {User}. Enjoy your stay. -------------- ");
                 }
