@@ -28,7 +28,7 @@ namespace xOS.CLog
             }
             else
             {
-                Console.WriteLine(SysLogFile + " Dose not exits!");
+                Console.WriteLine(SysLogFile + " Does not exits!");
             }
         }
     }
