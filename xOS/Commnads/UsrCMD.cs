@@ -10,6 +10,8 @@ namespace xOS.Commnads
 
     {
         private static string UsrFile = GVariables.UsrFile;
+        private static string LoginFile = GVariables.LoginFile;
+
         public static void RunUserCMD(string input)
         {
 
@@ -19,34 +21,51 @@ namespace xOS.Commnads
             {
                 try
                 {
-                    Console.Write("User Name: ");
-                    string UserName = Console.ReadLine();
-                    Console.Write("User Type (a - Administrator, u - Normal User): ");
-                    string UserType = Console.ReadLine();
-                    Console.Write("User Password: ");
-                    string UserPass = Users.GetHiddenConsoleInput();
-                    Console.WriteLine("\n");
-                    string UsrFileRead;
 
                     //we check if user file exists
                     if (File.Exists(UsrFile))
                     {
-                        UsrFileRead = File.ReadAllText(UsrFile);
-
-                        //we check if user exists in file
-                        if (UsrFileRead.Contains(UserName))
+                        string UserAdmin = GetUserType(UsrFile, LoginFile);
+                 
+                        if (UserAdmin == "a")
                         {
-                            Console.WriteLine($"User {UserName}, already exist!");
+                            Console.Write("User Name: ");
+                            string UserName = Console.ReadLine();
+                            Console.Write("User Type (a - Administrator, u - Normal User): ");
+                            string UserType = Console.ReadLine();
+                            Console.Write("User Password: ");
+                            string UserPass = Users.GetHiddenConsoleInput();
+                            Console.WriteLine("\n");
+                            string UsrFileRead;
+
+                            UsrFileRead = File.ReadAllText(UsrFile);
+
+                            //we check if user exists in file
+                            if (UsrFileRead.Contains(UserName))
+                            {
+                                Console.WriteLine($"User {UserName}, already exist!");
+                            }
+                            else
+                            {
+                                File.AppendAllText(UsrFile, $"{UserName}|{Cryptography.Encrypt(UserPass)}|{UserType}\n");
+                                Console.WriteLine($"Created user: {UserName}");
+                                CLog.CLog.SysLog_LoadOS($"Created user: {UserName}");
+                            }
                         }
                         else
                         {
-                            File.AppendAllText(UsrFile, $"{UserName}|{Cryptography.Encrypt(UserPass)}|{UserType}\n");
-                            Console.WriteLine($"Created user: {UserName}");
-                            CLog.CLog.SysLog_LoadOS($"Created user: {UserName}");
+                            Console.WriteLine($"Your account is not Administrator!");
                         }
                     }
                     else
                     {
+                        Console.Write("User Name: ");
+                        string UserName = Console.ReadLine();
+                        Console.Write("User Password: ");
+                        string UserPass = Users.GetHiddenConsoleInput();
+                        Console.WriteLine("\n");
+                        string UsrFileRead;
+
                         //we initialize the users file
                         File.Create(UsrFile);
                         CLog.CLog.SysLog_LoadOS($"Users file (usr.u) is initialized!");
@@ -59,7 +78,7 @@ namespace xOS.Commnads
                         }
                         else
                         {
-                            File.AppendAllText(UsrFile, $"{UserName}|{Cryptography.Encrypt(UserPass)}|{UserType}\n");
+                            File.AppendAllText(UsrFile, $"{UserName}|{Cryptography.Encrypt(UserPass)}|a\n");
                             Console.WriteLine($"Created user: {UserName}");
                             CLog.CLog.SysLog_LoadOS($"Created user: {UserName}");
                         }
@@ -81,31 +100,60 @@ namespace xOS.Commnads
                 {
                     if (File.Exists(UsrFile))
                     {
-                        string dUser = input.Split(' ')[1];
-                        string uList = string.Empty;
-                        var ReadUsers = File.ReadAllLines(UsrFile);
-                        foreach(var User in ReadUsers)
+                        string UserAdmin = GetUserType(UsrFile, LoginFile);
+                        if (UserAdmin == "a")
                         {
-                            if (!User.Contains(dUser) && User.Length > 0)
+                            string dUser = input.Split(' ')[1];
+                            string uList = string.Empty;
+                            var ReadUsers = File.ReadAllLines(UsrFile);
+                            foreach (var User in ReadUsers)
                             {
-                                uList += User+Environment.NewLine;
+                                if (!User.Contains(dUser) && User.Length > 0)
+                                {
+                                    uList += User + Environment.NewLine;
+                                }
                             }
+                            File.WriteAllText(UsrFile, uList);
+                            CLog.CLog.SysLog_LoadOS($"User {dUser} was deleted!");
+                            Console.WriteLine($"User {dUser} was deleted!");
                         }
-                        File.WriteAllText(UsrFile, uList);
-                        CLog.CLog.SysLog_LoadOS($"User {dUser} was deleted!");
-                        Console.WriteLine($"User {dUser} was deleted!");
+                        else
+                        {
+                            Console.WriteLine($"Your account is not Administrator!");
+                        }
                     }
                     else
                     {
-                        Console.WriteLine("User file dose not exist!");
+                        Console.WriteLine("User file does not exist!");
                     }
-
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     Console.WriteLine(e.Message);
                 }
             }
+
         }
-     }
+
+        /// <summary>
+        /// Get the type of the current user logged in 
+        /// </summary>
+        /// <param name="UserFile">Specify the user.u path</param>
+        /// <param name="LoginFile">Specify the login.t path</param>
+        /// <returns></returns>
+        private static string GetUserType(string UserFile, string LoginFile)
+        {
+            string[] UsersList = File.ReadAllLines(UserFile);
+            string LogedUser = File.ReadAllText(LoginFile).Split('|')[1];
+            string UserAdmin = string.Empty;
+            foreach (var user in UsersList)
+            {
+                if (user.Contains(LogedUser))
+                {
+                    UserAdmin = user.Split('|')[2].ToLower();
+                }
+            }
+            return UserAdmin;
+        }
+    }
 }
