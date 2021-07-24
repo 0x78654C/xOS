@@ -1,19 +1,38 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
 using Sys = Cosmos.System;
 
 namespace xOS.FileSystem
 {
-    public class File
+    public class FileM
     {
+        /*File Management class*/
+
+        private static string cDirFile = GVariables.cDirFile; //current directory location
+
+
+        /// <summary>
+        /// Creates a simple file. Command: mf 
+        /// </summary>
+        /// <param name="FileName">Specify a file name</param>
         public static void CreateFile(string FileName)
         {
             try
             {
+                string cDir = File.ReadAllText(cDirFile);
                 FileName = FileName.Split(' ')[1];
-                Sys.FileSystem.VFS.VFSManager.CreateFile(FileName);
-                Console.WriteLine($"File {FileName} was created!");
+                if (string.IsNullOrEmpty(cDir) && FileName.Contains(@"0:\"))
+                {
+                    Sys.FileSystem.VFS.VFSManager.CreateFile(FileName);
+                    Console.WriteLine($"File {FileName} was created!");
+                }
+                else
+                {
+                    Sys.FileSystem.VFS.VFSManager.CreateFile(cDir+@"\"+FileName);
+                    Console.WriteLine($"File {FileName} was created!");
+                }
             }
             catch (Exception e)
             {
@@ -21,13 +40,26 @@ namespace xOS.FileSystem
             }
         }
 
+        /// <summary>
+        /// Deletes a specific file. Command: rf
+        /// </summary>
+        /// <param name="FileName">Specify a file name</param>
         public static void DeleteFile(string FileName)
         {
             try
             {
                 FileName = FileName.Split(' ')[1];
-                System.IO.File.Delete(FileName);
-                Console.WriteLine($"File {FileName} was deleted!");
+                string cDir = File.ReadAllText(cDirFile);
+                if (string.IsNullOrEmpty(cDir) && FileName.Contains(@"0:\"))
+                {
+                    File.Delete(FileName);
+                    Console.WriteLine($"File {FileName} was deleted!");
+                }
+                else
+                {
+                    File.Delete(cDir+@"\"+FileName);
+                    Console.WriteLine($"File {FileName} was deleted!");
+                }
             }
             catch (Exception e)
             {
@@ -36,29 +68,51 @@ namespace xOS.FileSystem
         }
 
         /// <summary>
-        /// Reading Data from a file
+        /// Reading Data from a file. Command: df
         /// Encoding: UTF8
         /// </summary>
-        /// <param name="FileName"></param>
+        /// <param name="FileName">Specify a file name</param>
         public static void Read_File(string FileName)
         {
             try
             {
                 FileName = FileName.Split(' ')[1];
-                if (System.IO.File.Exists(FileName))
+                string cDir = File.ReadAllText(cDirFile);
+                if(string.IsNullOrEmpty(cDir) && FileName.Contains(@"0:\"))
                 {
-                    var hello_file = Sys.FileSystem.VFS.VFSManager.GetFile(FileName);
-                    var hello_file_stream = hello_file.GetFileStream();
-
-                    if (hello_file_stream.CanRead)
+                    if (File.Exists(FileName))
                     {
-                        byte[] text_to_read= System.IO.File.ReadAllBytes(FileName);
-                        Console.WriteLine(Encoding.UTF8.GetString(text_to_read));
+                        var hello_file = Sys.FileSystem.VFS.VFSManager.GetFile(FileName);
+                        var hello_file_stream = hello_file.GetFileStream();
+
+                        if (hello_file_stream.CanRead)
+                        {
+                            byte[] text_to_read = File.ReadAllBytes(FileName);
+                            Console.WriteLine(Encoding.UTF8.GetString(text_to_read));
+                        }
                     }
-                }
-                else
+                    else
+                    {
+                        Console.WriteLine($"FIle {FileName} dose not exit!");
+                    }
+                }else
                 {
-                    Console.WriteLine($"FIle {FileName} dose not exit!");
+                    FileName = cDir + @"\" + FileName;
+                    if (File.Exists(FileName))
+                    {
+                        var hello_file = Sys.FileSystem.VFS.VFSManager.GetFile(FileName);
+                        var hello_file_stream = hello_file.GetFileStream();
+
+                        if (hello_file_stream.CanRead)
+                        {
+                            byte[] text_to_read = File.ReadAllBytes(FileName);
+                            Console.WriteLine(Encoding.UTF8.GetString(text_to_read));
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"FIle {FileName} dose not exit!");
+                    }
                 }
             }
             catch (Exception e)
@@ -68,31 +122,56 @@ namespace xOS.FileSystem
         }
 
         /// <summary>
-        /// Write data to file. 
+        /// Write data to file with overwrite. Command: wf
         /// At the moment only ASCII
         /// </summary>
-        /// <param name="FileName"></param>
+        /// <param name="FileName">Specify a file name</param>
         public static void Write_To_File(string FileName)
         {
             try
             {
                 string Fn = FileName.Split(' ')[1];
-                Console.Write("Type: ");
-                string Data = Console.ReadLine();
-                Console.WriteLine(Data);
-                var hello_file = Sys.FileSystem.VFS.VFSManager.GetFile(@Fn);
-                if (System.IO.File.Exists(@Fn))
+                string cDir = File.ReadAllText(cDirFile);
+                if (string.IsNullOrEmpty(cDir) && FileName.Contains(@"0:\"))
                 {
-                    var hello_file_stream = hello_file.GetFileStream();
-
-                    if (hello_file_stream.CanWrite)
+                    Console.Write("Type: ");
+                    string Data = Console.ReadLine();
+                    Console.WriteLine(Data);
+                    var hello_file = Sys.FileSystem.VFS.VFSManager.GetFile(@Fn);
+                    if (File.Exists(@Fn))
                     {
-                        System.IO.File.WriteAllText(@Fn, Data);
+                        var hello_file_stream = hello_file.GetFileStream();
+
+                        if (hello_file_stream.CanWrite)
+                        {
+                            File.WriteAllText(@Fn, Data);
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"File {FileName} dose not exist!");
                     }
                 }
                 else
                 {
-                    Console.WriteLine($"File {FileName} dose not exist!");
+                    Fn = cDir + @"\" + Fn;
+                    Console.Write("Type: ");
+                    string Data = Console.ReadLine();
+                    Console.WriteLine(Data);
+                    var hello_file = Sys.FileSystem.VFS.VFSManager.GetFile(@Fn);
+                    if (File.Exists(@Fn))
+                    {
+                        var hello_file_stream = hello_file.GetFileStream();
+
+                        if (hello_file_stream.CanWrite)
+                        {
+                            File.WriteAllText(@Fn, Data);
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"File {FileName} dose not exist!");
+                    }
                 }
             }
             catch (Exception e)
@@ -101,26 +180,53 @@ namespace xOS.FileSystem
             }
         }
 
-        public static void Append_To_File2(string input)
+        /// <summary>
+        /// Appends data to a file. Command: af
+        /// </summary>
+        /// <param name="FileName">Specify a file name</param>
+        public static void Append_To_File(string FileName)
         {
             try
             {
-                string Fn = input.Split(' ')[1];
-                string Data = input.Split(' ')[2];
-                var hello_file = Sys.FileSystem.VFS.VFSManager.GetFile(@Fn);
-                if (System.IO.File.Exists(@Fn))
+                string Fn = FileName.Split(' ')[1];
+                string Data = FileName.Split(' ')[2];
+                string cDir = File.ReadAllText(cDirFile);
+                if (string.IsNullOrEmpty(cDir) && FileName.Contains(@"0:\"))
                 {
-                    var hello_file_stream = hello_file.GetFileStream();
-                    var read_file = System.IO.File.ReadAllText(@Fn);
-
-                    if (hello_file_stream.CanWrite)
+                    var hello_file = Sys.FileSystem.VFS.VFSManager.GetFile(@Fn);
+                    if (File.Exists(@Fn))
                     {
-                        System.IO.File.WriteAllText(@Fn, read_file + Data);
+                        var hello_file_stream = hello_file.GetFileStream();
+                        var read_file = File.ReadAllText(@Fn);
+
+                        if (hello_file_stream.CanWrite)
+                        {
+                            File.WriteAllText(@Fn, read_file + Data);
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"File {Fn} dose not exist!");
                     }
                 }
                 else
                 {
-                    Console.WriteLine($"File {Fn} dose not exist!");
+                    Fn = cDir + @"\" + Fn;
+                    var hello_file = Sys.FileSystem.VFS.VFSManager.GetFile(@Fn);
+                    if (File.Exists(@Fn))
+                    {
+                        var hello_file_stream = hello_file.GetFileStream();
+                        var read_file = File.ReadAllText(@Fn);
+
+                        if (hello_file_stream.CanWrite)
+                        {
+                            File.WriteAllText(@Fn, read_file + Data);
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"File {Fn} dose not exist!");
+                    }
                 }
             }
             catch (Exception e)
