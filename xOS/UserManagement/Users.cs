@@ -57,7 +57,7 @@ namespace xOS.FileSystem
 
             if(exist==false)
             {
-                Console.WriteLine($"User {user} dose not exist!");
+                Console.WriteLine($"User {user} does not exist!");
             }
             return o;
         }
@@ -69,11 +69,9 @@ namespace xOS.FileSystem
         {
             try
             {
-                Console.WriteLine("Welcome to xOS. To use this operating system you need to create first a local account. \n");
+                Console.WriteLine("Welcome to xOS. To use this operating system you need to create first a local administrator account. \n");
                 Console.Write("User Name: ");
                 string UserName = Console.ReadLine();
-                Console.Write("User Type (a - Administrator, u - Normal User): ");
-                string UserType = Console.ReadLine();
                 Console.Write("User Password: ");
                 string UserPass = GetHiddenConsoleInput();
                 Console.WriteLine("\n");
@@ -91,7 +89,7 @@ namespace xOS.FileSystem
                     }
                     else
                     {
-                        File.AppendAllText(UsrFile, $"{UserName}|{Cryptography.Encrypt(UserPass)}|{UserType}\n");
+                        File.AppendAllText(UsrFile, $"{UserName}|{Cryptography.Encrypt(UserPass)}|a\n");
                         Console.WriteLine($"Created user: {UserName}");
                         CLog.CLog.SysLog_LoadOS($"Created user: {UserName}");
                     }
