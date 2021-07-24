@@ -48,8 +48,8 @@ List if commands that can be used on xOS:
 ------------------------------------
 ------User Management-------
 
-    cuser - Creates a OS user. Ex: cuser USERNAME PASSWORD
-    duser - Deletes a OS user. Ex: duser USERNAME
+    cuser - Creates a OS user. Adminitrator user required
+    duser - Deletes a OS user. Adminitrator user required
 
 ------------------------------------
     
