@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using Sys = Cosmos.System;
+using System.Text.RegularExpressions;
+using xOS.Core;
 
 namespace xOS.FileSystem
 {
@@ -233,6 +235,183 @@ namespace xOS.FileSystem
             catch (Exception e)
             {
                 Console.WriteLine(e.ToString());
+            }
+        }
+
+        /// <summary>
+        /// Copy file to a certain path. Command: fcopy
+        /// </summary>
+        /// <param name="Data">source and destination</param>
+        public static void CopyFile(string Data)
+        {
+            try
+            {
+                string source = Data.Split(' ')[1];
+                string destination = Data.Split(' ')[2];
+                string cDir = File.ReadAllText(cDirFile);
+                string sPath = Parsing.ParseFilePath(source);
+                string dPath = Parsing.ParseFilePath(destination);
+
+                if ((sPath != cDir) && (dPath != cDir)) //path of destination and source file is not equal to current dir
+                {
+                    if (!File.Exists(destination) && File.Exists(source))
+                    {
+                        File.Copy(source, destination);
+                        Console.WriteLine($"File {source} copied to {destination}");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"File {destination} already exists or source file does not exist!");
+                    }
+                }
+                else if ((sPath == cDir) && (dPath != cDir)) //path of source equals the current directory but destination does not
+                {
+                    source = cDir + @"\" + source;
+
+                    if (!File.Exists(destination) && File.Exists(source))
+                    {
+                        File.Copy(source, destination);
+                        Console.WriteLine($"File {source} copied to {destination}");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"File {destination} already exists or source file does not exist!");
+                    }
+                }
+                else if ((sPath != cDir) && (dPath == cDir)) //path of destination equals the current directory but source does not
+                {
+                    destination = cDir + @"\" + destination;
+                    if (!File.Exists(destination) && File.Exists(source))
+                    {
+                        File.Copy(source, destination);
+                        Console.WriteLine($"File {source} copied to {destination}");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"File {destination} already exists or source file does not exist!");
+                    }
+                }
+                else if ((sPath == cDir) && (dPath == cDir)) //both source and destination equals to current path
+                {
+                    source = cDir + @"\" + source;
+                    destination = cDir + @"\" + destination;
+                    if (!File.Exists(destination) && File.Exists(source))
+                    {
+                        File.Copy(source, destination);
+                        Console.WriteLine($"File {source} copied to {destination}");
+                    }
+                    else
+                    {
+                        Console.WriteLine($"File {destination} already exists or source file does not exist!");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+
+        /// <summary>
+        /// Move file to a certain path. Command fmove
+        /// </summary>
+        /// <param name="Data">source and destination</param>
+        public static void MoveFile(string Data)
+        {
+            try
+            {
+                string source = Data.Split(' ')[1];
+                string destination = Data.Split(' ')[2];
+                string cDir = File.ReadAllText(cDirFile);
+                string sPath = Parsing.ParseFilePath(source);
+                string dPath = Parsing.ParseFilePath(destination);
+
+                if ((sPath != cDir) && (dPath != cDir)) //path of destination and source file is not equal to current dir
+                {
+                    if (!File.Exists(destination) && File.Exists(source))
+                    {
+                        File.Copy(source, destination);
+                        if (File.Exists(destination))
+                        {
+                            File.Delete(source);
+                            Console.WriteLine($"File {source} moved to {destination}");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"File {source} could not be moved!");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"File {destination} already exists or source file does not exist!");
+                    }
+                }
+                else if ((sPath == cDir) && (dPath != cDir)) //path of source equals the current directory but destination does not
+                {
+                    source = cDir + @"\" + source;
+                    if (!File.Exists(destination) && File.Exists(source))
+                    {
+                        File.Copy(source, destination);
+                        if (File.Exists(destination))
+                        {
+                            File.Delete(source);
+                            Console.WriteLine($"File {source} moved to {destination}");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"File {source} could not be moved!");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"File {destination} already exists or source file does not exist!");
+                    }
+                }else if ((sPath != cDir) && (dPath == cDir)) //path of destination equals the current directory but source does not
+                {
+                    destination = cDir + @"\" + destination;
+                    if (!File.Exists(destination) && File.Exists(source))
+                    {
+                        File.Copy(source, destination);
+                        if (File.Exists(destination))
+                        {
+                            File.Delete(source);
+                            Console.WriteLine($"File {source} moved to {destination}");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"File {source} could not be moved!");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"File {destination} already exists or source file does not exist!");
+                    }
+                }else if((sPath == cDir) && (dPath == cDir)) //both source and destination equals to current path
+                {
+                    source = cDir + @"\" + source;
+                    destination = cDir + @"\" + destination;
+                    if (!File.Exists(destination) && File.Exists(source))
+                    {
+                        File.Copy(source, destination);
+                        if (File.Exists(destination))
+                        {
+                            File.Delete(source);
+                            Console.WriteLine($"File {source} moved to {destination}");
+                        }
+                        else
+                        {
+                            Console.WriteLine($"File {source} could not be moved!");
+                        }
+                    }
+                    else
+                    {
+                        Console.WriteLine($"File {destination} already exists or source file does not exist!");
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
             }
         }
     }
