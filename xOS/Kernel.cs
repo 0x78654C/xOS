@@ -65,23 +65,31 @@ namespace xOS
                 }
                 var input = Console.ReadLine();
                 //--------------------------------------
-
-                //run System Commands
-                Commnads.SytemCMD.RunSysCMD(input);
-
-                //run Files management commands
-                Commnads.FileCMD.RunFileCMD(input);
-
-                //run Directory management commands
-                Commnads.DirectoryCMD.RunDirCMD(input);
-
-                //run User Managemenet commands
-                Commnads.UsrCMD.RunUserCMD(input);
-
-                //run Help command
-                Commnads.HelpCMD.RunHelpCMD(input);
-
+                RunCommands(input);
             }
+        }
+
+
+        /// <summary>
+        /// Initialize xOS Commands
+        /// </summary>
+        /// <param name="input"></param>
+        private static void RunCommands(string input)
+        {
+            //run System Commands
+            Commands.SytemCMD.RunSysCMD(input);
+
+            //run Files management commands
+            Commands.FileCMD.RunFileCMD(input);
+
+            //run Directory management commands
+            Commands.DirectoryCMD.RunDirCMD(input);
+
+            //run User Managemenet commands
+            Commands.UsrCMD.RunUserCMD(input);
+
+            //run Help command
+            Commands.HelpCMD.RunHelpCMD(input);
         }
     }
 }
