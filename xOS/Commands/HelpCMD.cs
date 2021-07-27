@@ -33,6 +33,8 @@ List if commands that can be used on xOS:
     df - Displays content of a file from a specific path in console. Ex: df [PATH]\[FileName]
     wf - Writes data to a file in a specific path with overwrite. Ex: wf [PATH]\[FileName]
     af - Appends data to a file in a specific path with overwrite. Ex: af [PATH]\[FileName] input_data
+    fcopy - Copy a file to a certain location. Ex: fcopy [PATH]\[FileName] [PATH]\[FileName]
+    fmove - Moves a file to a certain location. Ex: fmove [PATH]\[FileName] [PATH]\[FileName]
 
 -----------------------------------");
 
