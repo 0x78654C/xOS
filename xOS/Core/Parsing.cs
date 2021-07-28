@@ -43,5 +43,37 @@ namespace xOS.Core
             }
             return path;
         }
+        /// <summary>
+        /// Get the path of file or adding the current directory path
+        /// Used for file copy/move methods
+        /// </summary>
+        /// <param name="FilePath"></param>
+        /// <returns></returns>
+        public static string ParseDirectoryPath(string FilePath)
+        {
+            string path;
+            string cDir;
+            if (FilePath.Contains("\\"))
+            {
+                int c = 0;
+
+                foreach (char delimiter in FilePath)
+                {
+                    if (delimiter == '\\')
+                    {
+                        c++;
+                    }
+                }
+                FilePath = FilePath.Split('\\')[c];
+                path = FilePath;
+                return path;
+            }
+            else
+            {
+                cDir = File.ReadAllText(cDirFile);
+                path = cDir;
+            }
+            return path;
+        }
     }
 }
