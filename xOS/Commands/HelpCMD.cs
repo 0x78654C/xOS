@@ -35,6 +35,7 @@ List if commands that can be used on xOS:
     af - Appends data to a file in a specific path with overwrite. Ex: af [PATH]\[FileName] input_data
     fcopy - Copy a file to a certain location. Ex: fcopy [PATH]\[FileName] [PATH]\[FileName]
     fmove - Moves a file to a certain location. Ex: fmove [PATH]\[FileName] [PATH]\[FileName]
+    dcopy - Copy a directory to a certain location. Ex: fcopy [PATH]\[DirName] [PATH]\[DirName]
 
 -----------------------------------");
 
