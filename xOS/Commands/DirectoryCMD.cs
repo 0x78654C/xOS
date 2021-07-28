@@ -21,6 +21,18 @@ namespace xOS.Commands
             {
                 FileSystem.DirectoryM.DeleteDir(input);
             }
+
+            //copy directory
+            if (input.StartsWith("dcopy"))
+            {
+                FileSystem.DirectoryM.CopyDirectory(input);
+            }
+            
+            //move directory
+            if (input.StartsWith("dmove"))
+            {
+                FileSystem.DirectoryM.MoveDirectory(input);
+            }
             #endregion
         }
     }
