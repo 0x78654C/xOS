@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Sys = Cosmos.System;
-using FlappyBirds;
 using System.IO;
-using System.Threading;
 using xOS.FileSystem;
+using Sys = Cosmos.System;
 
 
 namespace xOS
@@ -13,20 +9,21 @@ namespace xOS
     public class Kernel : Sys.Kernel
     {
 
-        public static string LoggedStatus = "0";
-        private static string uLogin = string.Empty;
-        private static string User = string.Empty;
-        private static string cDir = string.Empty;
-        private static string cDirFile = GVariables.cDirFile;
-        private static string LoginFile = GVariables.LoginFile;
+        public static string loggedStatus = "0";
+        private static string s_userLogin = string.Empty;
+        private static string s_user = string.Empty;
+        private static string s_currentLocation = string.Empty;
+        private static readonly string s_currentLocationFile = GlobalVariables.CurrentLocationFile;
+        private static readonly string s_loginFile = GlobalVariables.LoginFile;
+        private static readonly string s_SysLogFile = GlobalVariables.SystemLogFile;
         /// <summary>
         /// Before run the main shell
         /// </summary>
         protected override void BeforeRun()
         {
-            Root.Create_Root();                              //loading partitions and file system
-            Root.Initialize_Sys_Dirs();                      //initialiaze the system structure creation 
-            CLog.CLog.SysLog_LoadOS("System loaded");        //storing information in log when system is succesfully started - includes datetime
+            Root.CreateRoot();                              //loading partitions and file system
+            Root.InitializeSystemDirectories();                      //initialiaze the system structure creation 
+            CLog.LogSystem.SystemLogAudit(s_SysLogFile, "System loaded");        //storing information in log when system is succesfully started - includes datetime
             Console.Clear();
             Console.WriteLine("=================================================================");
             Console.WriteLine("=====================WELCOME TO xOS SYSTEM=======================");
@@ -39,29 +36,29 @@ namespace xOS
         protected override void Run()
         {
             // logins system initialize
-            LoggedStatus = File.ReadAllText(LoginFile);
-            LoggedStatus = LoggedStatus.Split('|')[0];
-            if (LoggedStatus == "0")
+            loggedStatus = File.ReadAllText(s_loginFile);
+            loggedStatus = loggedStatus.Split('|')[0];
+            if (loggedStatus == "0")
             {
-                uLogin = Users.UserLogin();
-                if (uLogin.Contains("logged"))
+                s_userLogin = UsersManagement.UserLogin();
+                if (s_userLogin.Contains("logged"))
                 {
-                    User = uLogin.Split('|')[1];
-                    File.WriteAllText(LoginFile, $"1|{User}");
+                    s_user = s_userLogin.Split('|')[1];
+                    File.WriteAllText(s_loginFile, $"1|{s_user}");
                     Console.Clear();
-                    Console.WriteLine($"-------------- Welcome to xOS, {User}. Enjoy your stay. -------------- ");
+                    Console.WriteLine($"-------------- Welcome to xOS, {s_user}. Enjoy your stay. -------------- ");
                 }
             }
             else
             {
-                cDir = File.ReadAllText(cDirFile);
-                if (!string.IsNullOrEmpty(cDir))
+                s_currentLocation = File.ReadAllText(s_currentLocationFile);
+                if (!string.IsNullOrEmpty(s_currentLocation))
                 {
-                    Console.Write($"{User} ({cDir})$ ");
+                    Console.Write($"{s_user} ({s_currentLocation})$ ");
                 }
                 else
                 {
-                    Console.Write($"{User} $ ");
+                    Console.Write($"{s_user} $ ");
                 }
                 var input = Console.ReadLine();
                 //--------------------------------------
@@ -73,23 +70,23 @@ namespace xOS
         /// <summary>
         /// Initialize xOS Commands
         /// </summary>
-        /// <param name="input"></param>
-        private static void RunCommands(string input)
+        /// <param name="inputData"></param>
+        private static void RunCommands(string inputData)
         {
             //run System Commands
-            Commands.SytemCMD.RunSysCMD(input);
+            Commands.SytemCommand.SystemCommands(inputData);
 
             //run Files management commands
-            Commands.FileCMD.RunFileCMD(input);
+            Commands.FileCMD.FileCommands(inputData);
 
             //run Directory management commands
-            Commands.DirectoryCMD.RunDirCMD(input);
+            Commands.DirectoryCommand.DirectoryCommands(inputData);
 
             //run User Managemenet commands
-            Commands.UsrCMD.RunUserCMD(input);
+            Commands.UsrCMD.UserCommands(inputData);
 
             //run Help command
-            Commands.HelpCMD.RunHelpCMD(input);
+            Commands.HelpCMD.HelpCommands(inputData);
         }
     }
 }

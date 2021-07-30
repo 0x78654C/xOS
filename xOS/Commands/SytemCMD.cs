@@ -1,81 +1,80 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
+﻿using Cosmos.HAL;
+using System;
 using System.IO;
+using System.Threading;
 using xOS.FileSystem;
-using Cosmos.HAL;
 
 namespace xOS.Commands
 {
-    public static class SytemCMD
+    public static class SytemCommand
     {
-        private static string cDirFile = GVariables.cDirFile;
-        private static string LoginFile = GVariables.LoginFile;
-        private static string dLetter = @"0:\";
+        private static readonly string s_DirFile = GlobalVariables.CurrentLocationFile;
+        private static readonly string s_LoginFile = GlobalVariables.LoginFile;
+        private static readonly string s_PartitionLetter = @"0:\";
+        private static readonly string s_SysLogFile = GlobalVariables.SystemLogFile;
 
-        public static void RunSysCMD(string input)
+        public static void SystemCommands(string inputData)
         {
 
             //list file and folders
-            if (input.StartsWith("ls"))
+            if (inputData.StartsWith("ls"))
             {
-                if (input.Length == 2)
+                if (inputData.Length == 2)
                 {
-                    Root.Test_Root();
+                    Root.ListCommand();
                 }
                 else
                 {
-                    input = input.Split(' ')[1];
-                    Root.Test_Root(input);
+                    inputData = inputData.Split(' ')[1];
+                    Root.ListCommand(inputData);
                 }
             }
 
             //clear console
-            if (input == "clear")
+            if (inputData == "clear")
             {
                 Console.Clear();
                 Console.WriteLine("--------------------Welcome to xOS----------------------");
             }
 
             //shutdown command... BETA
-            if(input == "shutdown")
+            if (inputData == "shutdown")
             {
                 Console.WriteLine("xOS is shuting down!");
-                CLog.CLog.SysLog_LoadOS("xOS is shuting down!");
+                CLog.LogSystem.SystemLogAudit(s_SysLogFile,"xOS is shuting down!");
                 Thread.Sleep(1500);
                 Cosmos.System.Power.Shutdown();
-            } 
+            }
 
             //system reboot command.. BETA
-            if (input == "reboot")
+            if (inputData == "reboot")
             {
                 Console.WriteLine("xOS is restarting!");
-                CLog.CLog.SysLog_LoadOS("xOS is restarting!");
+                CLog.LogSystem.SystemLogAudit(s_SysLogFile,"xOS is restarting!");
                 Thread.Sleep(1500);
                 Cosmos.System.Power.Reboot();
             }
 
             //current directory command
-            if (input.StartsWith("cd"))
+            if (inputData.StartsWith("cd"))
             {
                 try
                 {
-                    string DirPath = input.Split(' ')[1];
-                    string DirPathSaved = File.ReadAllText(cDirFile);
+                    string DirPath = inputData.Split(' ')[1];
+                    string DirPathSaved = File.ReadAllText(s_DirFile);
 
                     if (string.IsNullOrEmpty(DirPathSaved))
                     {
 
                         if (System.IO.Directory.Exists(DirPath))
                         {
-                            if (DirPath.Contains(dLetter))
+                            if (DirPath.Contains(s_PartitionLetter))
                             {
-                                File.WriteAllText(cDirFile, DirPath);
+                                File.WriteAllText(s_DirFile, DirPath);
                             }
                             else
                             {
-                                File.WriteAllText(cDirFile,dLetter + DirPath);
+                                File.WriteAllText(s_DirFile, s_PartitionLetter + DirPath);
                             }
                         }
                         else
@@ -87,13 +86,13 @@ namespace xOS.Commands
                     {
                         if (System.IO.Directory.Exists(DirPathSaved + @"\" + DirPath))
                         {
-                            if (DirPath.Contains(dLetter))
+                            if (DirPath.Contains(s_PartitionLetter))
                             {
-                                File.WriteAllText(cDirFile, DirPath);
+                                File.WriteAllText(s_DirFile, DirPath);
                             }
                             else
                             {
-                                File.WriteAllText(cDirFile, DirPathSaved +@"\"+ DirPath);
+                                File.WriteAllText(s_DirFile, DirPathSaved + @"\" + DirPath);
                             }
                         }
                         else
@@ -102,21 +101,21 @@ namespace xOS.Commands
                         }
                     }
                 }
-                catch 
+                catch
                 {
-                    File.WriteAllText(cDirFile, string.Empty);
+                    File.WriteAllText(s_DirFile, string.Empty);
                 }
             }
 
             //logout the current users command
-            if (input.StartsWith("logout"))
+            if (inputData.StartsWith("logout"))
             {
-                File.WriteAllText(LoginFile, "0");
+                File.WriteAllText(s_LoginFile, "0");
                 Console.Clear();
             }
 
             //shout current time command
-            if (input == "time")
+            if (inputData == "time")
             {
                 string d = RTC.DayOfTheMonth.ToString();
                 string y = RTC.Year.ToString();

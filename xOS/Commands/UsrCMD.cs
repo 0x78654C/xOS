@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Linq;
 using System.IO;
 using xOS.FileSystem;
 namespace xOS.Commands
@@ -9,24 +6,25 @@ namespace xOS.Commands
     public static class UsrCMD
 
     {
-        private static string UsrFile = GVariables.UsrFile;
-        private static string LoginFile = GVariables.LoginFile;
+        private static readonly string s_UserFile = GlobalVariables.UsersFile;
+        private static readonly string s_LoginFile = GlobalVariables.LoginFile;
+        private static readonly string s_SysLogFile = FileSystem.GlobalVariables.SystemLogFile;
 
-        public static void RunUserCMD(string input)
+        public static void UserCommands(string inputData)
         {
 
             //create user commnad
             //example: cuser username password usertyp(a - administrarot, u - normal user)
-            if (input.StartsWith("cuser"))
+            if (inputData.StartsWith("cuser"))
             {
                 try
                 {
 
                     //we check if user file exists
-                    if (File.Exists(UsrFile))
+                    if (File.Exists(s_UserFile))
                     {
-                        string UserAdmin = GetUserType(UsrFile, LoginFile);
-                 
+                        string UserAdmin = GetUserType(s_UserFile, s_LoginFile);
+
                         if (UserAdmin == "a")
                         {
                             Console.Write("User Name: ");
@@ -34,11 +32,11 @@ namespace xOS.Commands
                             Console.Write("User Type (a - Administrator, u - Normal User): ");
                             string UserType = Console.ReadLine();
                             Console.Write("User Password: ");
-                            string UserPass = Users.GetHiddenConsoleInput();
+                            string UserPass = UsersManagement.GetHiddenConsoleInput();
                             Console.WriteLine("\n");
                             string UsrFileRead;
 
-                            UsrFileRead = File.ReadAllText(UsrFile);
+                            UsrFileRead = File.ReadAllText(s_UserFile);
 
                             //we check if user exists in file
                             if (UsrFileRead.Contains(UserName))
@@ -47,9 +45,9 @@ namespace xOS.Commands
                             }
                             else
                             {
-                                File.AppendAllText(UsrFile, $"{UserName}|{Cryptography.Encrypt(UserPass)}|{UserType}\n");
+                                File.AppendAllText(s_UserFile, $"{UserName}|{Cryptography.Encrypt(UserPass)}|{UserType}\n");
                                 Console.WriteLine($"Created user: {UserName}");
-                                CLog.CLog.SysLog_LoadOS($"Created user: {UserName}");
+                                CLog.LogSystem.SystemLogAudit(s_SysLogFile, $"Created user: {UserName}");
                             }
                         }
                         else
@@ -62,30 +60,30 @@ namespace xOS.Commands
                         Console.Write("User Name: ");
                         string UserName = Console.ReadLine();
                         Console.Write("User Password: ");
-                        string UserPass = Users.GetHiddenConsoleInput();
+                        string UserPass = UsersManagement.GetHiddenConsoleInput();
                         Console.WriteLine("\n");
                         string UsrFileRead;
 
                         //we initialize the users file
-                        File.Create(UsrFile);
-                        CLog.CLog.SysLog_LoadOS($"Users file (usr.u) is initialized!");
-                        UsrFileRead = File.ReadAllText(UsrFile);
+                        File.Create(s_UserFile);
+                        CLog.LogSystem.SystemLogAudit(s_SysLogFile,$"Users file (usr.u) is initialized!");
+                        UsrFileRead = File.ReadAllText(s_UserFile);
 
                         //we check if user exists in file
                         if (UsrFileRead.Contains(UserName))
-                        { 
+                        {
                             Console.WriteLine($"User {UserName}, already exist!");
                         }
                         else
                         {
-                            File.AppendAllText(UsrFile, $"{UserName}|{Cryptography.Encrypt(UserPass)}|a\n");
+                            File.AppendAllText(s_UserFile, $"{UserName}|{Cryptography.Encrypt(UserPass)}|a\n");
                             Console.WriteLine($"Created user: {UserName}");
-                            CLog.CLog.SysLog_LoadOS($"Created user: {UserName}");
+                            CLog.LogSystem.SystemLogAudit(s_SysLogFile,$"Created user: {UserName}");
                         }
                     }
 
                 }
-                catch(Exception E)
+                catch (Exception E)
                 {
                     Console.WriteLine(E.Message);
                 }
@@ -94,18 +92,18 @@ namespace xOS.Commands
 
 
             //delete user command
-            if (input.StartsWith("duser"))
+            if (inputData.StartsWith("duser"))
             {
                 try
                 {
-                    if (File.Exists(UsrFile))
+                    if (File.Exists(s_UserFile))
                     {
-                        string UserAdmin = GetUserType(UsrFile, LoginFile);
+                        string UserAdmin = GetUserType(s_UserFile, s_LoginFile);
                         if (UserAdmin == "a")
                         {
-                            string dUser = input.Split(' ')[1];
+                            string dUser = inputData.Split(' ')[1];
                             string uList = string.Empty;
-                            var ReadUsers = File.ReadAllLines(UsrFile);
+                            var ReadUsers = File.ReadAllLines(s_UserFile);
                             foreach (var User in ReadUsers)
                             {
                                 if (!User.Contains(dUser) && User.Length > 0)
@@ -113,8 +111,8 @@ namespace xOS.Commands
                                     uList += User + Environment.NewLine;
                                 }
                             }
-                            File.WriteAllText(UsrFile, uList);
-                            CLog.CLog.SysLog_LoadOS($"User {dUser} was deleted!");
+                            File.WriteAllText(s_UserFile, uList);
+                            CLog.LogSystem.SystemLogAudit(s_SysLogFile,$"User {dUser} was deleted!");
                             Console.WriteLine($"User {dUser} was deleted!");
                         }
                         else
@@ -138,13 +136,13 @@ namespace xOS.Commands
         /// <summary>
         /// Get the type of the current user logged in 
         /// </summary>
-        /// <param name="UserFile">Specify the user.u path</param>
-        /// <param name="LoginFile">Specify the login.t path</param>
+        /// <param name="userFile">Specify the user.u path</param>
+        /// <param name="loginFile">Specify the login.t path</param>
         /// <returns></returns>
-        private static string GetUserType(string UserFile, string LoginFile)
+        private static string GetUserType(string userFile, string loginFile)
         {
-            string[] UsersList = File.ReadAllLines(UserFile);
-            string LogedUser = File.ReadAllText(LoginFile).Split('|')[1];
+            string[] UsersList = File.ReadAllLines(userFile);
+            string LogedUser = File.ReadAllText(loginFile).Split('|')[1];
             string UserAdmin = string.Empty;
             foreach (var user in UsersList)
             {

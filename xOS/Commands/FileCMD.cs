@@ -1,56 +1,53 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using xOS.FileSystem;
+﻿using xOS.FileSystem;
 namespace xOS.Commands
 {
-   public static class FileCMD
+    public static class FileCMD
     {
-        public static void RunFileCMD(string input)
+        public static void FileCommands(string inputData)
         {
 
             #region Files Section
             //create file in a certain path or root folder
-            if (input.StartsWith("mf"))
+            if (inputData.StartsWith("mf"))
             {
-                FileM.CreateFile(input);
+                FileManagement.CreateFile(inputData);
             }
 
             //delete file in a certain path or root folder
-            if (input.StartsWith("rf"))
+            if (inputData.StartsWith("rf"))
             {
-                FileM.DeleteFile(input);
+                FileManagement.DeleteFile(inputData);
             }
 
             //read file from a certain path or root folder
-            if (input.StartsWith("df"))
+            if (inputData.StartsWith("df"))
             {
-                FileM.Read_File(input);
+                FileManagement.ReadFile(inputData);
             }
 
             //writes data to file in a certain path or root folder with overwrite
-            if (input.StartsWith("wf"))
+            if (inputData.StartsWith("wf"))
             {
-                FileM.Write_To_File(input);
+                FileManagement.WriteToFile(inputData);
             }
 
 
             //append data to file in a certain path or root folder
-            if (input.StartsWith("af"))
+            if (inputData.StartsWith("af"))
             {
-                FileM.Append_To_File(input);
+                FileManagement.AppendToFile(inputData);
             }
 
             //file copy to a certain path
-            if (input.StartsWith("fcopy"))
+            if (inputData.StartsWith("fcopy"))
             {
-                FileM.CopyFile(input);
+                FileManagement.CopyFile(inputData);
             }
 
             //file move to a certain path
-            if (input.StartsWith("fmove"))
+            if (inputData.StartsWith("fmove"))
             {
-                FileM.MoveFile(input);
+                FileManagement.MoveFile(inputData);
             }
             #endregion
 

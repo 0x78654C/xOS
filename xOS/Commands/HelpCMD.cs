@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace xOS.Commands
 {
@@ -13,11 +11,11 @@ namespace xOS.Commands
         /// <summary>
         /// info command
         /// </summary>
-        /// <param name="input"></param>
-        public static void RunHelpCMD(string input)
+        /// <param name="inputData"></param>
+        public static void HelpCommands(string inputData)
         {
-            input = input.ToLower();
-            if (input == "help")
+            inputData = inputData.ToLower();
+            if (inputData == "help")
             {
                 Console.WriteLine(@"
 List if commands that can be used on xOS:

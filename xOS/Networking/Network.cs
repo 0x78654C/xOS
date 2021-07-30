@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.NetworkInformation;
-using System.Text;
-using System.Threading.Tasks;
-using System.Net;
 using System.Net.Sockets;
-using System.IO;
 using System.Threading;
 
 namespace Core
@@ -16,7 +10,7 @@ namespace Core
 
 
         //declare date variable
-        private static string date = string.Empty;
+        private static string s_date = string.Empty;
         //------------------
 
 
@@ -25,8 +19,8 @@ namespace Core
         /// </summary>
         /// <param name="ip">Enter the hostname/IP address.</param>
         /// <returns>string</returns>
-       
-        public static bool pingH(string ip)
+
+        public static bool PingHost(string ip)
         {
             bool pingable = false;
             Ping pinger = null;
@@ -38,9 +32,9 @@ namespace Core
                 Thread.Sleep(200);
 
             }
-            catch (PingException p)
+            catch
             {
-                date = DateTime.Now.ToString("yyyy-dd-HH:mm");
+                s_date = DateTime.Now.ToString("yyyy-dd-HH:mm");
             }
             finally
             {
@@ -57,9 +51,9 @@ namespace Core
         /// Checking internet connection with Google DNS 8.8.8.8
         /// </summary>
         /// <returns>bool</returns>
-        public static bool inetCK()
+        public static bool InternetCheck()
         {
-            if (pingH("8.8.8.8"))
+            if (PingHost("8.8.8.8"))
             {
                 return true;
             }
@@ -75,7 +69,7 @@ namespace Core
         /// <param name="address">Add the ip/hostname address</param>
         /// <param name="port">Port</param>
         /// <returns>bool</returns>
-        public static bool portCheck(string address,int port)
+        public static bool PortCheck(string address, int port)
         {
             var connect = new TcpClient(address, port);
             if (connect.Connected)

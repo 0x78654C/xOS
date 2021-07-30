@@ -1,37 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-
-namespace xOS.Commands
+﻿namespace xOS.Commands
 {
-   public static class DirectoryCMD
+    public static class DirectoryCommand
     {
-        public static void RunDirCMD(string input)
+        public static void DirectoryCommands(string inputData)
         {
             #region Directory Section
             //make new directory
-            if (input.StartsWith("mkdir"))
+            if (inputData.StartsWith("mkdir"))
             {
-                FileSystem.DirectoryM.CreateDir(input);
+                FileSystem.DirectoryManagement.CreateDirectory(inputData);
             }
 
             //delete directory
-            if (input.StartsWith("rmdir"))
+            if (inputData.StartsWith("rmdir"))
             {
-                FileSystem.DirectoryM.DeleteDir(input);
+                FileSystem.DirectoryManagement.DeleteDirectory(inputData);
             }
 
             //copy directory
-            if (input.StartsWith("dcopy"))
+            if (inputData.StartsWith("dcopy"))
             {
-                FileSystem.DirectoryM.CopyDirectory(input);
+                FileSystem.DirectoryManagement.CopyDirectory(inputData);
             }
-            
+
             //move directory
-            if (input.StartsWith("dmove"))
+            if (inputData.StartsWith("dmove"))
             {
-                FileSystem.DirectoryM.MoveDirectory(input);
+                FileSystem.DirectoryManagement.MoveDirectory(inputData);
             }
             #endregion
         }

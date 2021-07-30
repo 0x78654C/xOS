@@ -1,0 +1,41 @@
+﻿-----------System directory structure-----------------
+
+0:\ -- Sys\ -- (OS system files/diectoryies)  A(f)
+		    |- Usr\ (User management stuff)  A(f) ,u(r)
+		    |- Log\ (Log/Audit system)		 A(f) ,u(w)	
+		    |- Tmp\ (Temporary variables)	 A(f) ,u(w)
+	-- Users\ A(f) ,U(w) -- (For storeing particular user data. Ex. Making a directory for each user and when login to be directed there) 
+
+Legend:
+A - administrator
+U - user
+f - full access
+w - write access in specific sections
+r - read only
+-------------------------------------------------------
+
+1. (DONE) - add users with atributes(ex: normal user and administrators). 
+	  Codification: u - user, a - admnistrators, f - full access, r - read only, w - write access in specific sections
+	(DONE) - modify certain commands for administrators only. ex: cuser, duser
+	- auto lock user after a certain time ammount of time with option to Enable/Disable via command for each user in particulary
+
+2.  - console key up/down scroll support
+	- mouse console scroll support
+
+3.	- increase crypto power on users password
+
+4.  - add graphical support
+
+5. (DONE)	- finish 'cd' command and implement to all commands that requires a dir location
+
+6.	- fix system reboot/shutdown commands
+
+7. (DONE)	- ad file check on file management commands
+
+8. (DONE)	- improve cuser command with hidden password
+
+9.	- (In progress) copy/move file/directory command (Need check/fix delete non empty files)
+
+10. (DONE) - fix help command to displaymore info
+
+11. - remove fom 'ls' command the partition 0:\ info. make separate command

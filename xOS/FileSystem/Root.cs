@@ -1,29 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.IO;
-using Cosmos.HAL;
-using Cosmos.Common;
 using Sys = Cosmos.System;
 namespace xOS.FileSystem
 {
     public static class Root
     {
         //declare global variables
-        private static string SysVol = GVariables.SysVol;
-        private static string SysDir = GVariables.SysDir;
-        private static string UsersDir = GVariables.UsersDir;
-        private static string UsrDir = GVariables.UsrDir;
-        private static string LogDir = GVariables.LogDir;
-        private static string TmpDir = GVariables.TmpDir;
-        private static string cDirFile = GVariables.cDirFile;
-        private static string LoginFile = GVariables.LoginFile;
-        private static string SYSLogFile = GVariables.SYSLogFile;
-        private static string UsrFile = GVariables.UsrFile;
+        private static readonly string s_systemDirectory = GlobalVariables.SystemDirectory;
+        private static readonly string s_userDirectory = GlobalVariables.UserDirectory;
+        private static readonly string s_userFile = GlobalVariables.UsersFile;
+        private static readonly string s_logDirectory = GlobalVariables.LogDirectory;
+        private static readonly string s_tempDirectory = GlobalVariables.TempDirectory;
+        private static readonly string s_currentLocationFile = GlobalVariables.CurrentLocationFile;
+        private static readonly string s_loginFile = GlobalVariables.LoginFile;
+        private static readonly string s_systemLogFile = GlobalVariables.SystemLogFile;
+        private static readonly string s_usersFile = GlobalVariables.UsersFile;
         //--------------------------
 
         /*Creating root file system*/
-        public static void Create_Root()
+        public static void CreateRoot()
         {
             Sys.FileSystem.CosmosVFS fs;
             fs = new Sys.FileSystem.CosmosVFS();
@@ -43,90 +38,90 @@ namespace xOS.FileSystem
         /// 0:\Tmp\loing.t - Stores login state. 1 - loged in, 0 - loged out
         /// 0:\Users\
         /// </summary>
-        public static void Initialize_Sys_Dirs()
+        public static void InitializeSystemDirectories()
         {
             Console.WriteLine("Loading system...");
             //initialize 'Sys' directory
-            if (!System.IO.Directory.Exists(SysDir))
+            if (!Directory.Exists(s_systemDirectory))
             {
-                System.IO.Directory.CreateDirectory(SysDir);
-                Console.WriteLine($"Created {SysDir} directory!");
+                Directory.CreateDirectory(s_systemDirectory);
+                Console.WriteLine($"Created {s_systemDirectory} directory!");
             }
 
             //initialize 'Users' directory
-            if (!System.IO.Directory.Exists(UsersDir))
+            if (!Directory.Exists(s_userDirectory))
             {
-                System.IO.Directory.CreateDirectory(UsersDir);
-                Console.WriteLine($"Created {UsersDir} directory!");
+                Directory.CreateDirectory(s_userDirectory);
+                Console.WriteLine($"Created {s_userDirectory} directory!");
             }
 
             //initialize 'Usr' directory
-            if (!System.IO.Directory.Exists(UsrDir))
+            if (!Directory.Exists(s_userFile))
             {
-                System.IO.Directory.CreateDirectory(UsrDir);
-                Console.WriteLine($"Created {UsrDir} directory!");
+                Directory.CreateDirectory(s_userFile);
+                Console.WriteLine($"Created {s_userFile} directory!");
             }
 
             //initialize 'Log' directory
-            if (!System.IO.Directory.Exists(LogDir))
+            if (!Directory.Exists(s_logDirectory))
             {
-                System.IO.Directory.CreateDirectory(LogDir);
-                Console.WriteLine($"Created {LogDir} directory!");
+                Directory.CreateDirectory(s_logDirectory);
+                Console.WriteLine($"Created {s_logDirectory} directory!");
             }
             //initialize 'Tmp' directory
-            if (!System.IO.Directory.Exists(TmpDir))
+            if (!Directory.Exists(s_tempDirectory))
             {
-                System.IO.Directory.CreateDirectory(TmpDir);
-                Console.WriteLine($"Created {TmpDir} directory!");
+                Directory.CreateDirectory(s_tempDirectory);
+                Console.WriteLine($"Created {s_tempDirectory} directory!");
             }
 
             //initialize 'Tmp' directory
-            if (!System.IO.Directory.Exists(TmpDir))
+            if (!Directory.Exists(s_tempDirectory))
             {
-                System.IO.Directory.CreateDirectory(TmpDir);
-                Console.WriteLine($"Created {TmpDir} directory!");
+                Directory.CreateDirectory(s_tempDirectory);
+                Console.WriteLine($"Created {s_tempDirectory} directory!");
             }
 
             //initialize 'cDir.t' file
-            if (!File.Exists(cDirFile))
+            if (!File.Exists(s_currentLocationFile))
             {
-                File.Create(cDirFile);
-                Console.WriteLine($"Created {cDirFile} file!");
+                File.Create(s_currentLocationFile);
+                Console.WriteLine($"Created {s_currentLocationFile} file!");
             }
 
             //initialize 'login.t' file
-                File.WriteAllText(LoginFile,"0");
-                Console.WriteLine($"Initialize {LoginFile} file!");
+            File.WriteAllText(s_loginFile, "0");
+            Console.WriteLine($"Initialize {s_loginFile} file!");
 
             //initialize 'logSYS.l' file
-            if (!File.Exists(SYSLogFile))
+            if (!File.Exists(s_systemLogFile))
             {
-                File.Create(SYSLogFile);
-                Console.WriteLine($"Created {SYSLogFile} file!");
+                File.Create(s_systemLogFile);
+                Console.WriteLine($"Created {s_systemLogFile} file!");
             }
-                
+
             // initialize 'usr.u' file
-            if (!File.Exists(UsrFile))
+            if (!File.Exists(s_usersFile))
             {
-                File.Create(UsrFile);
-                Console.WriteLine($"Created {UsrFile} file!");
+                File.Create(s_usersFile);
+                Console.WriteLine($"Created {s_usersFile} file!");
                 Console.Clear();
 
                 //initiliaze first user account creation on first run
-                Users.Initilize_First_User();
+                UsersManagement.Initilize_First_User();
             }
         }
 
         /// <summary>
         /// ls command 
         /// </summary>
-        public static void Test_Root()
+        public static void ListCommand()
         {
-            string cDir = File.ReadAllText(cDirFile);
+            string cDir = File.ReadAllText(s_currentLocationFile);
             var drive = new DriveInfo("0");
             if (string.IsNullOrEmpty(cDir))
             {
-                string[] filePaths = System.IO.Directory.GetFiles(@"0:\");
+                string[] filePaths = Directory.GetFiles(@"0:\");
                 Console.WriteLine("\n");
 
                 for (int i = 0; i < filePaths.Length; ++i)
@@ -134,7 +129,7 @@ namespace xOS.FileSystem
                     string path = filePaths[i];
                     Console.WriteLine(System.IO.Path.GetFileName(path));
                 }
-                foreach (var d in System.IO.Directory.GetDirectories(@"0:\"))
+                foreach (var d in Directory.GetDirectories(@"0:\"))
                 {
                     var dir = new DirectoryInfo(d);
                     var dirName = dir.Name;
@@ -144,14 +139,14 @@ namespace xOS.FileSystem
             }
             else
             {
-                string[] filePaths = System.IO.Directory.GetFiles(cDir);
+                string[] filePaths = Directory.GetFiles(cDir);
                 Console.WriteLine("\n");
                 for (int i = 0; i < filePaths.Length; ++i)
                 {
                     string path = filePaths[i];
                     Console.WriteLine(System.IO.Path.GetFileName(path));
                 }
-                foreach (var d in System.IO.Directory.GetDirectories(cDir))
+                foreach (var d in Directory.GetDirectories(cDir))
                 {
                     var dir = new DirectoryInfo(d);
                     var dirName = dir.Name;
@@ -168,20 +163,20 @@ namespace xOS.FileSystem
         /// <summary>
         /// ls command with parameter
         /// </summary>
-        /// <param name="PathDir"></param>
-        public static void Test_Root(string PathDir)
+        /// <param name="pathDirectory"></param>
+        public static void ListCommand(string pathDirectory)
         {
-            if (System.IO.Directory.Exists(PathDir))
+            if (Directory.Exists(pathDirectory))
             {
                 var drive = new DriveInfo("0");
-                string[] filePaths = System.IO.Directory.GetFiles(PathDir);
+                string[] filePaths = Directory.GetFiles(pathDirectory);
 
                 for (int i = 0; i < filePaths.Length; ++i)
                 {
                     string path = filePaths[i];
                     Console.WriteLine(System.IO.Path.GetFileName(path));
                 }
-                foreach (var d in System.IO.Directory.GetDirectories(PathDir))
+                foreach (var d in Directory.GetDirectories(pathDirectory))
                 {
                     var dir = new DirectoryInfo(d);
                     var dirName = dir.Name;
@@ -196,7 +191,7 @@ namespace xOS.FileSystem
             }
             else
             {
-                Console.WriteLine($"Directory {PathDir} does not exist!");
+                Console.WriteLine($"Directory {pathDirectory} does not exist!");
             }
         }
     }
