@@ -22,12 +22,12 @@ namespace xOS.Commands
                 if (inputData.Length == 2)
                 {
                     Root.ListCommand();
+                    return;
                 }
-                else
-                {
-                    inputData = inputData.Split(' ')[1];
-                    Root.ListCommand(inputData);
-                }
+
+                inputData = inputData.Split(' ')[1];
+                Root.ListCommand(inputData);
+
             }
 
             //clear console
@@ -41,7 +41,7 @@ namespace xOS.Commands
             if (inputData == "shutdown")
             {
                 Console.WriteLine("xOS is shuting down!");
-                CLog.LogSystem.SystemLogAudit(s_SysLogFile,"xOS is shuting down!");
+                CLog.LogSystem.SystemLogAudit(s_SysLogFile, "xOS is shuting down!");
                 Thread.Sleep(1500);
                 Cosmos.System.Power.Shutdown();
             }
@@ -50,7 +50,7 @@ namespace xOS.Commands
             if (inputData == "reboot")
             {
                 Console.WriteLine("xOS is restarting!");
-                CLog.LogSystem.SystemLogAudit(s_SysLogFile,"xOS is restarting!");
+                CLog.LogSystem.SystemLogAudit(s_SysLogFile, "xOS is restarting!");
                 Thread.Sleep(1500);
                 Cosmos.System.Power.Reboot();
             }
@@ -66,40 +66,36 @@ namespace xOS.Commands
                     if (string.IsNullOrEmpty(DirPathSaved))
                     {
 
-                        if (System.IO.Directory.Exists(DirPath))
+                        if (Directory.Exists(DirPath))
                         {
                             if (DirPath.Contains(s_PartitionLetter))
                             {
                                 File.WriteAllText(s_DirFile, DirPath);
+                                return;
                             }
-                            else
-                            {
-                                File.WriteAllText(s_DirFile, s_PartitionLetter + DirPath);
-                            }
+                            File.WriteAllText(s_DirFile, s_PartitionLetter + DirPath);
+                            return;
+
                         }
-                        else
-                        {
-                            Console.WriteLine($"Direcotry {DirPath} does not exist!");
-                        }
+
+                        Console.WriteLine($"Direcotry {DirPath} does not exist!");
+                        return;
                     }
-                    else
+
+                    if (Directory.Exists(DirPathSaved + @"\" + DirPath))
                     {
-                        if (System.IO.Directory.Exists(DirPathSaved + @"\" + DirPath))
+                        if (DirPath.Contains(s_PartitionLetter))
                         {
-                            if (DirPath.Contains(s_PartitionLetter))
-                            {
-                                File.WriteAllText(s_DirFile, DirPath);
-                            }
-                            else
-                            {
-                                File.WriteAllText(s_DirFile, DirPathSaved + @"\" + DirPath);
-                            }
+                            File.WriteAllText(s_DirFile, DirPath);
+                            return;
                         }
-                        else
-                        {
-                            Console.WriteLine($"Direcotry {DirPath} does not exist!");
-                        }
+
+
+                        File.WriteAllText(s_DirFile, DirPathSaved + @"\" + DirPath);
+                        return;
                     }
+
+                    Console.WriteLine($"Direcotry {DirPath} does not exist!");
                 }
                 catch
                 {
