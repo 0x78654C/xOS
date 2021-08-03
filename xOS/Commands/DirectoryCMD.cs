@@ -5,25 +5,25 @@
         public static void DirectoryCommands(string inputData)
         {
             #region Directory Section
-            //make new directory
+            // Make new directory
             if (inputData.StartsWith("mkdir"))
             {
                 FileSystem.DirectoryManagement.CreateDirectory(inputData);
             }
 
-            //delete directory
+            // Melete directory
             if (inputData.StartsWith("rmdir"))
             {
                 FileSystem.DirectoryManagement.DeleteDirectory(inputData);
             }
 
-            //copy directory
+            // Copy directory
             if (inputData.StartsWith("dcopy"))
             {
                 FileSystem.DirectoryManagement.CopyDirectory(inputData);
             }
 
-            //move directory
+            // Move directory
             if (inputData.StartsWith("dmove"))
             {
                 FileSystem.DirectoryManagement.MoveDirectory(inputData);
