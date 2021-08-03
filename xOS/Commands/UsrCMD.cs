@@ -9,6 +9,7 @@ namespace xOS.Commands
         private static readonly string s_UserFile = GlobalVariables.UsersFile;
         private static readonly string s_LoginFile = GlobalVariables.LoginFile;
         private static readonly string s_SysLogFile = FileSystem.GlobalVariables.SystemLogFile;
+        private static int s_UserPassCheck = 0;
 
         public static void UserCommands(string inputData)
         {
@@ -19,6 +20,20 @@ namespace xOS.Commands
             {
                 try
                 {
+                    string UserName = string.Empty;
+                    string UserType = string.Empty;
+                    string UserPass = string.Empty;
+                    string UsrFileRead = string.Empty;
+                    Console.Write("User Name: ");
+                    UserName = Console.ReadLine();
+                    Console.Write("User Password: ");
+                    UserPass = UsersManagement.GetHiddenConsoleInput();
+                    CheckUserPassIntergirty(UserName, UserPass);
+
+                    if (s_UserPassCheck > 1)
+                    {
+                        return;
+                    }
 
                     //we check if user file exists
                     if (File.Exists(s_UserFile))
@@ -27,61 +42,44 @@ namespace xOS.Commands
 
                         if (UserAdmin == "a")
                         {
-                            Console.Write("User Name: ");
-                            string UserName = Console.ReadLine();
                             Console.Write("User Type (a - Administrator, u - Normal User): ");
-                            string UserType = Console.ReadLine();
-                            Console.Write("User Password: ");
-                            string UserPass = UsersManagement.GetHiddenConsoleInput();
-                            Console.WriteLine("\n");
-                            string UsrFileRead;
-
+                            UserType = Console.ReadLine();
+                            Console.WriteLine(Environment.NewLine);
                             UsrFileRead = File.ReadAllText(s_UserFile);
 
                             //we check if user exists in file
                             if (UsrFileRead.Contains(UserName))
                             {
                                 Console.WriteLine($"User {UserName}, already exist!");
+                                return;
                             }
-                            else
-                            {
-                                File.AppendAllText(s_UserFile, $"{UserName}|{Cryptography.Encrypt(UserPass)}|{UserType}\n");
-                                Console.WriteLine($"Created user: {UserName}");
-                                CLog.LogSystem.SystemLogAudit(s_SysLogFile, $"Created user: {UserName}");
-                            }
-                        }
-                        else
-                        {
-                            Console.WriteLine($"Your account is not Administrator!");
-                        }
-                    }
-                    else
-                    {
-                        Console.Write("User Name: ");
-                        string UserName = Console.ReadLine();
-                        Console.Write("User Password: ");
-                        string UserPass = UsersManagement.GetHiddenConsoleInput();
-                        Console.WriteLine("\n");
-                        string UsrFileRead;
 
-                        //we initialize the users file
-                        File.Create(s_UserFile);
-                        CLog.LogSystem.SystemLogAudit(s_SysLogFile,$"Users file (usr.u) is initialized!");
-                        UsrFileRead = File.ReadAllText(s_UserFile);
-
-                        //we check if user exists in file
-                        if (UsrFileRead.Contains(UserName))
-                        {
-                            Console.WriteLine($"User {UserName}, already exist!");
-                        }
-                        else
-                        {
-                            File.AppendAllText(s_UserFile, $"{UserName}|{Cryptography.Encrypt(UserPass)}|a\n");
+                            File.AppendAllText(s_UserFile, $"{UserName}|{Cryptography.Encrypt(UserPass)}|{UserType}" + Environment.NewLine);
                             Console.WriteLine($"Created user: {UserName}");
-                            CLog.LogSystem.SystemLogAudit(s_SysLogFile,$"Created user: {UserName}");
+                            CLog.LogSystem.SystemLogAudit(s_SysLogFile, $"Created user: {UserName}");
+                            return;
                         }
+
+                        Console.WriteLine($"Your account is not Administrator!");
+                        return;
                     }
 
+                    //we initialize the users file
+                    File.Create(s_UserFile);
+                    CLog.LogSystem.SystemLogAudit(s_SysLogFile, $"Users file (usr.u) is initialized!");
+                    UsrFileRead = File.ReadAllText(s_UserFile);
+
+                    //we check if user exists in file
+                    if (UsrFileRead.Contains(UserName))
+                    {
+                        Console.WriteLine($"User {UserName}, already exist!");
+                        return;
+                    }
+
+                    File.AppendAllText(s_UserFile, $"{UserName}|{Cryptography.Encrypt(UserPass)}|a" + Environment.NewLine);
+                    Console.WriteLine($"Created user: {UserName}");
+                    CLog.LogSystem.SystemLogAudit(s_SysLogFile, $"Created user: {UserName}");
+                    return;
                 }
                 catch (Exception E)
                 {
@@ -112,18 +110,17 @@ namespace xOS.Commands
                                 }
                             }
                             File.WriteAllText(s_UserFile, uList);
-                            CLog.LogSystem.SystemLogAudit(s_SysLogFile,$"User {dUser} was deleted!");
+                            CLog.LogSystem.SystemLogAudit(s_SysLogFile, $"User {dUser} was deleted!");
                             Console.WriteLine($"User {dUser} was deleted!");
+                            return;
                         }
-                        else
-                        {
-                            Console.WriteLine($"Your account is not Administrator!");
-                        }
+
+                        Console.WriteLine($"Your account is not Administrator!");
+                        return;
                     }
-                    else
-                    {
-                        Console.WriteLine("User file does not exist!");
-                    }
+
+                    Console.WriteLine("User file does not exist!");
+
                 }
                 catch (Exception e)
                 {
@@ -152,6 +149,22 @@ namespace xOS.Commands
                 }
             }
             return UserAdmin;
+        }
+
+        // Check the password and user length. Should be bigger than 4
+        private static void CheckUserPassIntergirty(string userName, string passWord)
+        {
+            if (userName.Length < 4)
+            {
+                Console.WriteLine(Environment.NewLine + "User name must have more than 4 characters!");
+                s_UserPassCheck++;
+            }
+
+            if (passWord.Length < 4)
+            {
+                Console.WriteLine(Environment.NewLine + "Password must have more than 4 characters!");
+                s_UserPassCheck++;
+            }
         }
     }
 }
