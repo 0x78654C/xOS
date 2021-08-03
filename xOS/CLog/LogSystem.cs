@@ -16,13 +16,13 @@ namespace xOS.CLog
             
             if (File.Exists(logFile))
             {
-                string d = RTC.DayOfTheMonth.ToString();
-                string y = RTC.Year.ToString();
-                string mo = RTC.Month.ToString();
-                string h = RTC.Hour.ToString();
-                string m = RTC.Minute.ToString();
-               // string s = RTC.Second.ToString(); //just for test is disabled
-                File.AppendAllText(logFile, $"[{d}-{mo}-{y} {h}:{m}] {logData} \n") ;
+                string day = RTC.DayOfTheMonth.ToString();
+                string year = RTC.Year.ToString();
+                string month = RTC.Month.ToString();
+                string hours = RTC.Hour.ToString();
+                string minutes = RTC.Minute.ToString();
+                string seconds = RTC.Second.ToString();
+                File.AppendAllText(logFile, $"[{day}-{month}-{year} {hours}:{minutes}:{seconds}] {logData} \n") ;
             }
             else
             {
