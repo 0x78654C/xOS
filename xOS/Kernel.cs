@@ -22,7 +22,7 @@ namespace xOS
         protected override void BeforeRun()
         {
             Root.CreateRoot();                              //loading partitions and file system
-            Root.InitializeSystemDirectories();                      //initialiaze the system structure creation 
+            Root.InitializeSystemStructure();                      //initialiaze the system structure creation 
             CLog.LogSystem.SystemLogAudit(s_SysLogFile, "System loaded");        //storing information in log when system is succesfully started - includes datetime
             Console.Clear();
             Console.WriteLine("=================================================================");
@@ -48,22 +48,19 @@ namespace xOS
                     Console.Clear();
                     Console.WriteLine($"-------------- Welcome to xOS, {s_user}. Enjoy your stay. -------------- ");
                 }
+                return;
             }
-            else
+            s_currentLocation = File.ReadAllText(s_currentLocationFile);
+            if (!string.IsNullOrEmpty(s_currentLocation))
             {
-                s_currentLocation = File.ReadAllText(s_currentLocationFile);
-                if (!string.IsNullOrEmpty(s_currentLocation))
-                {
-                    Console.Write($"{s_user} ({s_currentLocation})$ ");
-                }
-                else
-                {
-                    Console.Write($"{s_user} $ ");
-                }
-                var input = Console.ReadLine();
-                //--------------------------------------
-                RunCommands(input);
+                Console.Write($"{s_user} ({s_currentLocation})$ ");
+                return;
             }
+            Console.Write($"{s_user} $ ");
+            var input = Console.ReadLine();
+            //--------------------------------------
+
+            RunCommands(input);
         }
 
 
