@@ -38,9 +38,79 @@ namespace xOS.FileSystem
         /// 0:\Tmp\loing.t - Stores login state. 1 - loged in, 0 - loged out
         /// 0:\Users\
         /// </summary>
-        public static void InitializeSystemDirectories()
+        public static void InitializeSystemStructure()
         {
             Console.WriteLine("Loading system...");
+            InitializeDirectories();
+            InitializeFiles();
+        }
+
+        /// <summary>
+        /// ls command 
+        /// </summary>
+        public static void ListCommand()
+        {
+            string cDir = File.ReadAllText(s_currentLocationFile);
+            var drive = new DriveInfo("0");
+            cDir = !string.IsNullOrEmpty(cDir) ? cDir : @"0:\";
+            string[] filePaths = Directory.GetFiles(cDir);
+            Console.WriteLine("\n");
+
+            for (int i = 0; i < filePaths.Length; ++i)
+            {
+                string path = filePaths[i];
+                Console.WriteLine(Path.GetFileName(path));
+            }
+            foreach (var d in Directory.GetDirectories(cDir))
+            {
+                var dir = new DirectoryInfo(d);
+                var dirName = dir.Name;
+
+                Console.WriteLine(dirName + " <DIR>");
+            }
+
+            Console.WriteLine("\n");
+            Console.WriteLine(@"Partition 0:\ :");
+            Console.WriteLine("Total Size: " + $"{drive.TotalSize}" + " bytes");
+            Console.WriteLine("Available Free Space: " + $"{drive.AvailableFreeSpace}" + " bytes free");
+        }
+
+        /// <summary>
+        /// ls command with parameter
+        /// </summary>
+        /// <param name="pathDirectory"></param>
+        public static void ListCommand(string pathDirectory)
+        {
+            if (!Directory.Exists(pathDirectory))
+            {
+                Console.WriteLine($"Directory {pathDirectory} does not exist!");
+                return;
+            }
+
+            var drive = new DriveInfo("0");
+            string[] filePaths = Directory.GetFiles(pathDirectory);
+
+            for (int i = 0; i < filePaths.Length; ++i)
+            {
+                string path = filePaths[i];
+                Console.WriteLine(Path.GetFileName(path));
+            }
+            foreach (var d in Directory.GetDirectories(pathDirectory))
+            {
+                var dir = new DirectoryInfo(d);
+                var dirName = dir.Name;
+
+                Console.WriteLine(dirName + " <DIR>");
+            }
+
+            Console.WriteLine("\n");
+            Console.WriteLine(@"Partition 0:\ :");
+            Console.WriteLine("Total Size: " + $"{drive.TotalSize}" + " bytes");
+            Console.WriteLine("Available Free Space: " + $"{drive.AvailableFreeSpace}" + " bytes free");
+        }
+
+        private static void InitializeDirectories()
+        {
             //initialize 'Sys' directory
             if (!Directory.Exists(s_systemDirectory))
             {
@@ -81,7 +151,10 @@ namespace xOS.FileSystem
                 Directory.CreateDirectory(s_tempDirectory);
                 Console.WriteLine($"Created {s_tempDirectory} directory!");
             }
+        }
 
+        private static void InitializeFiles()
+        {
             //initialize 'cDir.t' file
             if (!File.Exists(s_currentLocationFile))
             {
@@ -109,89 +182,6 @@ namespace xOS.FileSystem
 
                 //initiliaze first user account creation on first run
                 UsersManagement.Initilize_First_User();
-            }
-        }
-
-        /// <summary>
-        /// ls command 
-        /// </summary>
-        public static void ListCommand()
-        {
-            string cDir = File.ReadAllText(s_currentLocationFile);
-            var drive = new DriveInfo("0");
-            if (string.IsNullOrEmpty(cDir))
-            {
-                string[] filePaths = Directory.GetFiles(@"0:\");
-                Console.WriteLine("\n");
-
-                for (int i = 0; i < filePaths.Length; ++i)
-                {
-                    string path = filePaths[i];
-                    Console.WriteLine(System.IO.Path.GetFileName(path));
-                }
-                foreach (var d in Directory.GetDirectories(@"0:\"))
-                {
-                    var dir = new DirectoryInfo(d);
-                    var dirName = dir.Name;
-
-                    Console.WriteLine(dirName + " <DIR>");
-                }
-            }
-            else
-            {
-                string[] filePaths = Directory.GetFiles(cDir);
-                Console.WriteLine("\n");
-                for (int i = 0; i < filePaths.Length; ++i)
-                {
-                    string path = filePaths[i];
-                    Console.WriteLine(System.IO.Path.GetFileName(path));
-                }
-                foreach (var d in Directory.GetDirectories(cDir))
-                {
-                    var dir = new DirectoryInfo(d);
-                    var dirName = dir.Name;
-
-                    Console.WriteLine(dirName + " <DIR>");
-                }
-            }
-            Console.WriteLine("\n");
-            Console.WriteLine(@"Partition 0:\ :");
-            Console.WriteLine("Total Size: " + $"{drive.TotalSize}" + " bytes");
-            Console.WriteLine("Available Free Space: " + $"{drive.AvailableFreeSpace}" + " bytes free");
-        }
-
-        /// <summary>
-        /// ls command with parameter
-        /// </summary>
-        /// <param name="pathDirectory"></param>
-        public static void ListCommand(string pathDirectory)
-        {
-            if (Directory.Exists(pathDirectory))
-            {
-                var drive = new DriveInfo("0");
-                string[] filePaths = Directory.GetFiles(pathDirectory);
-
-                for (int i = 0; i < filePaths.Length; ++i)
-                {
-                    string path = filePaths[i];
-                    Console.WriteLine(System.IO.Path.GetFileName(path));
-                }
-                foreach (var d in Directory.GetDirectories(pathDirectory))
-                {
-                    var dir = new DirectoryInfo(d);
-                    var dirName = dir.Name;
-
-                    Console.WriteLine(dirName + " <DIR>");
-                }
-
-                Console.WriteLine("\n");
-                Console.WriteLine(@"Partition 0:\ :");
-                Console.WriteLine("Total Size: " + $"{drive.TotalSize}" + " bytes");
-                Console.WriteLine("Available Free Space: " + $"{drive.AvailableFreeSpace}" + " bytes free");
-            }
-            else
-            {
-                Console.WriteLine($"Directory {pathDirectory} does not exist!");
             }
         }
     }
