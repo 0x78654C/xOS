@@ -14,7 +14,6 @@ namespace xOS.FileSystem
         //login system
         public static string UserLogin()
         {
-
             Console.WriteLine("--Login--");
             Console.Write("User Name: ");
             string user = Console.ReadLine();
@@ -43,7 +42,7 @@ namespace xOS.FileSystem
                             else
                             {
                                 o = $"logged|{User}";
-                                CLog.LogSystem.SystemLogAudit(s_SysLogFile,$"User: {user} logged");
+                                CLog.LogSystem.SystemLogAudit(s_SysLogFile, $"User: {user} logged");
                                 Console.Clear();
                             }
                         }
@@ -69,12 +68,12 @@ namespace xOS.FileSystem
         {
             try
             {
-                Console.WriteLine("Welcome to xOS. To use this operating system you need to create first a local administrator account. \n");
+                Console.WriteLine("Welcome to xOS. To use this operating system you need to create first a local administrator account." +Environment.NewLine);
                 Console.Write("User Name: ");
                 string UserName = Console.ReadLine();
                 Console.Write("User Password: ");
                 string UserPass = GetHiddenConsoleInput();
-                Console.WriteLine("\n");
+                Console.WriteLine(Environment.NewLine);
                 string UsrFileRead;
 
                 //we check if user file exists
@@ -86,13 +85,11 @@ namespace xOS.FileSystem
                     if (UsrFileRead.Contains(UserName))
                     {
                         Console.WriteLine($"User {UserName}, already exist!");
+                        return;
                     }
-                    else
-                    {
-                        File.AppendAllText(s_usersFile, $"{UserName}|{Cryptography.Encrypt(UserPass)}|a\n");
-                        Console.WriteLine($"Created user: {UserName}");
-                        CLog.LogSystem.SystemLogAudit(s_SysLogFile,$"Created user: {UserName}");
-                    }
+                    File.AppendAllText(s_usersFile, $"{UserName}|{Cryptography.Encrypt(UserPass)}|a\n");
+                    Console.WriteLine($"Created user: {UserName}");
+                    CLog.LogSystem.SystemLogAudit(s_SysLogFile, $"Created user: {UserName}");
                 }
             }
             catch (Exception E)
