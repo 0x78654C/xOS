@@ -17,7 +17,9 @@ namespace xOS.FileSystem
         private static readonly string s_usersFile = GlobalVariables.UsersFile;
         //--------------------------
 
-        /*Creating root file system*/
+        /// <summary>
+        /// Creating root file system.
+        /// </summary>
         public static void CreateRoot()
         {
             Sys.FileSystem.CosmosVFS fs;
@@ -69,10 +71,7 @@ namespace xOS.FileSystem
                 Console.WriteLine(dirName + " <DIR>");
             }
 
-            Console.WriteLine("\n");
-            Console.WriteLine(@"Partition 0:\ :");
-            Console.WriteLine("Total Size: " + $"{drive.TotalSize}" + " bytes");
-            Console.WriteLine("Available Free Space: " + $"{drive.AvailableFreeSpace}" + " bytes free");
+            DisplayPartitonSize(drive);
         }
 
         /// <summary>
@@ -103,12 +102,19 @@ namespace xOS.FileSystem
                 Console.WriteLine(dirName + " <DIR>");
             }
 
+            DisplayPartitonSize(drive);
+        }
+
+        // Display partition information about total size and free space.
+        private static void DisplayPartitonSize(DriveInfo drive)
+        {
             Console.WriteLine("\n");
             Console.WriteLine(@"Partition 0:\ :");
             Console.WriteLine("Total Size: " + $"{drive.TotalSize}" + " bytes");
             Console.WriteLine("Available Free Space: " + $"{drive.AvailableFreeSpace}" + " bytes free");
         }
 
+        // Initialize the system directories.
         private static void InitializeDirectories()
         {
             //initialize 'Sys' directory
@@ -153,6 +159,7 @@ namespace xOS.FileSystem
             }
         }
 
+        // Initialize the system files.
         private static void InitializeFiles()
         {
             //initialize 'cDir.t' file
