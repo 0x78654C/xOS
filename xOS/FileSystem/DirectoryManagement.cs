@@ -12,25 +12,16 @@ namespace xOS.FileSystem
         /// <summary>
         /// Creates a directory. Command: mkdir
         /// </summary>
-        /// <param name="dirName">The directory name</param>
-        public static void CreateDirectory(string dirName)
+        /// <param name="directoryName">The directory name</param>
+        public static void CreateDirectory(string directoryName)
         {
             try
             {
                 string cDir = File.ReadAllText(s_CurrentDirectory);
-                dirName = dirName.Split(' ')[1];
-
-                if (!string.IsNullOrEmpty(cDir) && !dirName.Contains(@":\"))
-                {
-                    Directory.CreateDirectory(cDir + @"\" + dirName);
-                    Console.WriteLine($"Directory {cDir + @"\" + dirName} was created!");
-                }
-                else
-                {
-                    Directory.CreateDirectory(dirName);
-                    Console.WriteLine($"Directory {dirName} was created!");
-                }
-
+                directoryName = directoryName.Split(' ')[1];
+                directoryName = !string.IsNullOrEmpty(cDir) && !directoryName.Contains(@":\") ? cDir + @"\" + directoryName : directoryName;
+                Directory.CreateDirectory(directoryName);
+                Console.WriteLine($"Directory {directoryName} was created!");
             }
             catch (Exception e)
             {
@@ -41,25 +32,16 @@ namespace xOS.FileSystem
         /// <summary>
         /// Delete recursevly a directory. Command: rmdir
         /// </summary>
-        /// <param name="DirName">The directory name</param>
-        public static void DeleteDirectory(string DirName)
+        /// <param name="directoryName">The directory name</param>
+        public static void DeleteDirectory(string directoryName)
         {
             try
             {
                 string cDir = File.ReadAllText(s_CurrentDirectory);
-                DirName = DirName.Split(' ')[1];
-
-                if (!string.IsNullOrEmpty(cDir) && !DirName.Contains(@":\"))
-                {
-                    Directory.Delete(cDir + @"\" + DirName, true);
-                    Console.WriteLine($"Directory {cDir + @"\" + DirName} was deleted!");
-                }
-                else
-                {
-                    Directory.Delete(DirName);
-                    Console.WriteLine($"Directory {DirName} was deleted!");
-                }
-
+                directoryName = directoryName.Split(' ')[1];
+                directoryName = !string.IsNullOrEmpty(cDir) && !directoryName.Contains(@":\") ? cDir + @"\" + directoryName : directoryName;
+                Directory.Delete(directoryName, true);
+                Console.WriteLine($"Directory {directoryName} was deleted!");
             }
             catch (Exception e)
             {
@@ -84,55 +66,23 @@ namespace xOS.FileSystem
 
                 if ((sPath != cDir) && (dPath != cDir)) //path of destination and source file is not equal to current dir
                 {
-                    if (!Directory.Exists(destination) && Directory.Exists(source))
-                    {
-                        DirectoryCopy(source, destination, true);
-                        Console.WriteLine($"Directory {source} was copied to {destination}.");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Directory {destination} already exists or source directory does not exist!");
-                    }
+                    DirectoryMoveCopy(source, destination, false);
                 }
                 else if ((sPath == cDir) && (dPath != cDir)) //path of source equals the current directory but destination does not
                 {
                     source = cDir + @"\" + source;
-                    if (!Directory.Exists(destination) && Directory.Exists(source))
-                    {
-                        DirectoryCopy(source, destination, true);
-                        Console.WriteLine($"Directory {source} was copied to {destination}.");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Directory {destination} already exists or source directory does not exist!");
-                    }
+                    DirectoryMoveCopy(source, destination, false);
                 }
                 else if ((sPath != cDir) && (dPath == cDir)) //path of destination equals the current directory but source does not
                 {
                     destination = cDir + @"\" + destination;
-                    if (!Directory.Exists(destination) && Directory.Exists(source))
-                    {
-                        DirectoryCopy(source, destination, true);
-                        Console.WriteLine($"Directory {source} was copied to {destination}.");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Directory {destination} already exists or source directory does not exist!");
-                    }
+                    DirectoryMoveCopy(source, destination, false);
                 }
                 else if ((sPath == cDir) && (dPath == cDir)) //both source and destination equals to current path
                 {
                     source = cDir + @"\" + source;
                     destination = cDir + @"\" + destination;
-                    if (!Directory.Exists(destination) && Directory.Exists(source))
-                    {
-                        DirectoryCopy(source, destination, true);
-                        Console.WriteLine($"Directory {source} was copied to {destination}.");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Directory {destination} already exists or source directory does not exist!");
-                    }
+                    DirectoryMoveCopy(source, destination, false);
                 }
             }
             catch (Exception e)
@@ -158,55 +108,23 @@ namespace xOS.FileSystem
 
                 if ((sPath != cDir) && (dPath != cDir)) //path of destination and source file is not equal to current dir
                 {
-                    if (!Directory.Exists(destination) && Directory.Exists(source))
-                    {
-                        DirectoryMove(source, destination, true);
-                        Console.WriteLine($"Directory {source} was moved to {destination}.");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Directory {destination} already exists or source directory does not exist!");
-                    }
+                    DirectoryMoveCopy(source, destination, true);
                 }
                 else if ((sPath == cDir) && (dPath != cDir)) //path of source equals the current directory but destination does not
                 {
                     source = cDir + @"\" + source;
-                    if (!Directory.Exists(destination) && Directory.Exists(source))
-                    {
-                        DirectoryMove(source, destination, true);
-                        Console.WriteLine($"Directory {source} was moved to {destination}.");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Directory {destination} already exists or source directory does not exist!");
-                    }
+                    DirectoryMoveCopy(source, destination, true);
                 }
                 else if ((sPath != cDir) && (dPath == cDir)) //path of destination equals the current directory but source does not
                 {
                     destination = cDir + @"\" + destination;
-                    if (!Directory.Exists(destination) && Directory.Exists(source))
-                    {
-                        DirectoryMove(source, destination, true);
-                        Console.WriteLine($"Directory {source} was moved to {destination}.");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Directory {destination} already exists or source directory does not exist!");
-                    }
+                    DirectoryMoveCopy(source, destination, true);
                 }
                 else if ((sPath == cDir) && (dPath == cDir)) //both source and destination equals to current path
                 {
                     source = cDir + @"\" + source;
                     destination = cDir + @"\" + destination;
-                    if (!Directory.Exists(destination) && Directory.Exists(source))
-                    {
-                        DirectoryMove(source, destination, true);
-                        Console.WriteLine($"Directory {source} was moved to {destination}.");
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Directory {destination} already exists or source directory does not exist!");
-                    }
+                    DirectoryMoveCopy(source, destination, true);
                 }
             }
             catch (Exception e)
@@ -297,5 +215,30 @@ namespace xOS.FileSystem
             }
         }
 
+        /// <summary>
+        /// Directory action: move/copy
+        /// </summary>
+        /// <param name="source">Source folder name</param>
+        /// <param name="destination">Destination folder name</param>
+        /// <param name="move">false - copy/ true - move</param>
+        private static void DirectoryMoveCopy(string source, string destination, bool move)
+        {
+            if (Directory.Exists(destination) || !Directory.Exists(source))
+            {
+                Console.WriteLine($"Directory {destination} already exists or source directory does not exist!");
+                return;
+            }
+
+            if (!move)
+            {
+                DirectoryCopy(source, destination, true);
+                Console.WriteLine($"Directory {source} was copied to {destination}.");
+                return;
+            }
+
+            DirectoryMove(source, destination, true);
+            Console.WriteLine($"Directory {source} was moved to {destination}.");
+            return;
+        }
     }
 }
