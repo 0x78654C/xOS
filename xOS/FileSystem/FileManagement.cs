@@ -105,7 +105,7 @@ namespace xOS.FileSystem
                 string Fn = fileName.Split(' ')[1];
                 string cDir = File.ReadAllText(s_CurrentDirectory);
                 @Fn = !string.IsNullOrEmpty(cDir) && fileName.Contains(@"0:\") ? @Fn : cDir + @"\" + @Fn;
-                Write(@Fn, false);  
+                Write(@Fn, false);
             }
             catch (Exception e)
             {
@@ -265,6 +265,7 @@ namespace xOS.FileSystem
             Console.Write("Type: ");
             string Data = Console.ReadLine();
             byte[] dataBytes = Encoding.ASCII.GetBytes(Data);
+            Data = string.IsNullOrEmpty(Data) ? string.Empty : Data;
             Console.WriteLine(Data);
             var hello_file = Sys.FileSystem.VFS.VFSManager.GetFile(fileName);
             if (!File.Exists(fileName))
@@ -279,7 +280,7 @@ namespace xOS.FileSystem
             {
                 if (!append)
                 {
-                    hello_file_stream.Write(dataBytes, 0, dataBytes.Length);
+                    File.WriteAllText(fileName, Data);
                     return;
                 }
                 var read_file = File.ReadAllText(fileName);
