@@ -9,12 +9,12 @@ namespace xOS
     public class Kernel : Sys.Kernel
     {
 
-        public static string loggedStatus = "0";
-        private static string s_userLogin = string.Empty;
-        private static string s_user = string.Empty;
-        private static string s_currentLocation = string.Empty;
-        private static readonly string s_currentLocationFile = GlobalVariables.CurrentLocationFile;
-        private static readonly string s_loginFile = GlobalVariables.LoginFile;
+        private static string s_LoggedStatus = "0";
+        private static string s_UserLogin = string.Empty;
+        private static string s_User = string.Empty;
+        private static string s_CurrentLocation = string.Empty;
+        private static readonly string s_CurrentLocationFile = GlobalVariables.CurrentLocationFile;
+        private static readonly string s_LoginFile = GlobalVariables.LoginFile;
         private static readonly string s_SysLogFile = GlobalVariables.SystemLogFile;
         /// <summary>
         /// Before run the main shell
@@ -36,31 +36,29 @@ namespace xOS
         protected override void Run()
         {
             // logins system initialize
-            loggedStatus = File.ReadAllText(s_loginFile);
-            loggedStatus = loggedStatus.Split('|')[0];
-            if (loggedStatus == "0")
+            s_LoggedStatus = File.ReadAllText(s_LoginFile);
+            s_LoggedStatus = s_LoggedStatus.Split('|')[0];
+            if (s_LoggedStatus == "0")
             {
-                s_userLogin = UsersManagement.UserLogin();
-                if (s_userLogin.Contains("logged"))
+                s_UserLogin = UsersManagement.UserLogin();
+                if (s_UserLogin.Contains("logged"))
                 {
-                    s_user = s_userLogin.Split('|')[1];
-                    File.WriteAllText(s_loginFile, $"1|{s_user}");
+                    s_User = s_UserLogin.Split('|')[1];
+                    File.WriteAllText(s_LoginFile, $"1|{s_User}");
                     Console.Clear();
-                    Console.WriteLine($"-------------- Welcome to xOS, {s_user}. Enjoy your stay. -------------- ");
+                    Console.WriteLine($"-------------- Welcome to xOS, {s_User}. Enjoy your stay. -------------- ");
                 }
-                return;
             }
-            s_currentLocation = File.ReadAllText(s_currentLocationFile);
-            if (!string.IsNullOrEmpty(s_currentLocation))
+            else
             {
-                Console.Write($"{s_user} ({s_currentLocation})$ ");
-                return;
+                s_CurrentLocation = File.ReadAllText(s_CurrentLocationFile);
+                string consoleUser = !string.IsNullOrEmpty(s_CurrentLocation) ? $"{s_User} ({s_CurrentLocation})$ " : $"{s_User} $ ";
+                Console.Write(consoleUser);
+                
+                // Running commands.
+                var input = Console.ReadLine();
+                RunCommands(input);
             }
-            Console.Write($"{s_user} $ ");
-            var input = Console.ReadLine();
-            //--------------------------------------
-
-            RunCommands(input);
         }
 
 
