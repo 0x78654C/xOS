@@ -53,14 +53,7 @@ namespace Core
         /// <returns>bool</returns>
         public static bool InternetCheck()
         {
-            if (PingHost("8.8.8.8"))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return PingHost("8.8.8.8");                           
         }
 
         /// <summary>
@@ -72,15 +65,7 @@ namespace Core
         public static bool PortCheck(string address, int port)
         {
             var connect = new TcpClient(address, port);
-            if (connect.Connected)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return connect.Connected;
         }
-
     }
 }
