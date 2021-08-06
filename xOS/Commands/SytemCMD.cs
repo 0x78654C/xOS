@@ -12,6 +12,7 @@ namespace xOS.Commands
         private static readonly string s_LoginFile = GlobalVariables.LoginFile;
         private static readonly string s_PartitionLetter = @"0:\";
         private static readonly string s_SysLogFile = GlobalVariables.SystemLogFile;
+        private static string s_User = string.Empty;
 
         public static void SystemCommands(string inputData)
         {
@@ -33,8 +34,9 @@ namespace xOS.Commands
             //clear console
             if (inputData == "clear")
             {
+                s_User = GetConnectedUser(s_LoginFile);
                 Console.Clear();
-                Console.WriteLine("--------------------Welcome to xOS----------------------");
+                Console.WriteLine($"-------------- Welcome to xOS, {s_User}. Enjoy your stay. -------------- ");
             }
 
             //shutdown command... BETA
@@ -121,6 +123,14 @@ namespace xOS.Commands
                 string s = RTC.Second.ToString();
                 Console.WriteLine($"Date: {d}-{mo}-{y} / Time: {h}:{m}:{s}");
             }
+        }
+
+        // Get current connected user.
+
+        private static string GetConnectedUser(string loginFile)
+        {
+            string userName = File.ReadAllText(loginFile).Split('|')[1];
+            return userName;
         }
     }
 }
