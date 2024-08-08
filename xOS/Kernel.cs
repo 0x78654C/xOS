@@ -21,9 +21,9 @@ namespace xOS
         /// </summary>
         protected override void BeforeRun()
         {
-            Root.CreateRoot();                              //loading partitions and file system
-            Root.InitializeSystemStructure();                      //initialiaze the system structure creation 
-            CLog.LogSystem.SystemLogAudit(s_SysLogFile, "System loaded");        //storing information in log when system is succesfully started - includes datetime
+            Root.CreateRoot();                                                   // Loading partitions and file system
+            Root.InitializeSystemStructure();                                    // Initialiaze the system structure creation 
+            CLog.LogSystem.SystemLogAudit(s_SysLogFile, "System loaded");        // Storing information in log when system is succesfully started - includes datetime
             Console.Clear();
             Console.WriteLine("=================================================================");
             Console.WriteLine("=====================WELCOME TO xOS SYSTEM=======================");
