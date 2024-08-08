@@ -26,11 +26,11 @@ List if commands that can be used on xOS:
     mkdir - Creates a directory in a specific path. Ex: mkdir [PATH]\[DirName]
     rmdir - Deletes a directory from a specific path with all the contet in it. Ex: rmdir [PATH]\[DirName]
 
-    mf - Creates a file in a specific path. Ex: mf [PATH]\[FileName]
-    rf - Deletes a file from a specific path. Ex: rf [PATH]\[FileName]
-    df - Displays content of a file from a specific path in console. Ex: df [PATH]\[FileName]
-    wf - Writes data to a file in a specific path with overwrite. Ex: wf [PATH]\[FileName]
-    af - Appends data to a file in a specific path with overwrite. Ex: af [PATH]\[FileName] input_data
+    mf  - Creates a file in a specific path. Ex: mf [PATH]\[FileName]
+    rf  - Deletes a file from a specific path. Ex: rf [PATH]\[FileName]
+    cat - Displays content of a file from a specific path in console. Ex: df [PATH]\[FileName]
+    wf  - Writes data to a file in a specific path with overwrite. Ex: wf [PATH]\[FileName]
+    af  - Appends data to a file in a specific path with overwrite. Ex: af [PATH]\[FileName] input_data
     fcopy - Copy a file to a certain location. Ex: fcopy [PATH]\[FileName] [PATH]\[FileName]
     fmove - Moves a file to a certain location. Ex: fmove [PATH]\[FileName] [PATH]\[FileName]
     dcopy - Copy a directory to a certain location. Ex: fcopy [PATH]\[DirName] [PATH]\[DirName]

@@ -20,7 +20,7 @@ namespace xOS.Commands
             }
 
             //read file from a certain path or root folder
-            if (inputData.StartsWith("df"))
+            if (inputData.StartsWith("cat"))
             {
                 FileManagement.ReadFile(inputData);
             }
