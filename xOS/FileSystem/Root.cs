@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using xOS.UI;
 using Sys = Cosmos.System;
 namespace xOS.FileSystem
 {
@@ -67,8 +68,7 @@ namespace xOS.FileSystem
             {
                 var dir = new DirectoryInfo(d);
                 var dirName = dir.Name;
-
-                Console.WriteLine(dirName + " <DIR>");
+                UIColor.ColorConsoleTextLine(ConsoleColor.DarkYellow, dirName);
             }
 
             DisplayPartitonSize(drive);
@@ -98,8 +98,7 @@ namespace xOS.FileSystem
             {
                 var dir = new DirectoryInfo(d);
                 var dirName = dir.Name;
-
-                Console.WriteLine(dirName + " <DIR>");
+                UIColor.ColorConsoleTextLine(ConsoleColor.DarkYellow, dirName);
             }
 
             DisplayPartitonSize(drive);
@@ -110,8 +109,8 @@ namespace xOS.FileSystem
         {
             Console.WriteLine("\n");
             Console.WriteLine(@"Partition 0:\ :");
-            Console.WriteLine("Total Size: " + $"{drive.TotalSize}" + " bytes");
-            Console.WriteLine("Available Free Space: " + $"{drive.AvailableFreeSpace}" + " bytes free");
+            Console.WriteLine("Total Size: " + $"{Conversion.ConvertSize(drive.TotalSize,false)}");
+            Console.WriteLine("Available Free Space: " + $"{Conversion.ConvertSize(drive.AvailableFreeSpace,false)}");
         }
 
         // Initialize the system directories.
