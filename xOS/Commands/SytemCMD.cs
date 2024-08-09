@@ -62,46 +62,75 @@ namespace xOS.Commands
             {
                 try
                 {
-                    string DirPath = inputData.Split(' ')[1];
-                    string DirPathSaved = File.ReadAllText(s_DirFile);
+                    // Back to root of main partition.
+                    // In this case 0:\
+                    if(inputData.Trim() == "cd")
+                    {
+                        File.WriteAllText(s_DirFile, s_PartitionLetter);
+                        return;
+                    }
 
-                    if (string.IsNullOrEmpty(DirPathSaved))
+                    string dirPath = inputData.Split(' ')[1];
+                    string dirPathSaved = File.ReadAllText(s_DirFile);
+
+                    // Backward change directory
+                    if (dirPath.Trim() == "..")
+                    {
+                        if (dirPathSaved == s_PartitionLetter)
+                            return;
+                        var readPathStoread = dirPathSaved.Split('\\');
+                        var lenDirSeparator = readPathStoread.Length;
+                        Console.WriteLine($"arr len: {lenDirSeparator}");
+                        var backwardDir = "";
+                        for (int i = 0; i < lenDirSeparator - 2; i++)
+                            backwardDir += readPathStoread[i] + "\\";
+                        
+                        if (lenDirSeparator == 2)
+                        {
+                            File.WriteAllText(s_DirFile, s_PartitionLetter);
+                            return;
+                        }
+                        File.WriteAllText(s_DirFile, backwardDir);
+                        return;
+                    }
+
+                    if (string.IsNullOrEmpty(dirPathSaved))
                     {
 
-                        if (Directory.Exists(DirPath))
+                        if (Directory.Exists(dirPath))
                         {
-                            if (DirPath.Contains(s_PartitionLetter))
+                            if (dirPath.Contains(s_PartitionLetter))
                             {
-                                File.WriteAllText(s_DirFile, DirPath);
+                                File.WriteAllText(s_DirFile, dirPath + "\\");
                                 return;
                             }
-                            File.WriteAllText(s_DirFile, s_PartitionLetter + DirPath);
+                            File.WriteAllText(s_DirFile, s_PartitionLetter + dirPath + "\\");
                             return;
 
                         }
 
-                        Console.WriteLine($"Direcotry {DirPath} does not exist!");
+                        Console.WriteLine($"Direcotry {dirPath} does not exist!");
                         return;
                     }
 
-                    if (Directory.Exists(DirPathSaved + @"\" + DirPath))
+                    if (Directory.Exists(dirPathSaved + dirPath))
                     {
-                        if (DirPath.Contains(s_PartitionLetter))
+                        if (dirPath.Contains(s_PartitionLetter))
                         {
-                            File.WriteAllText(s_DirFile, DirPath);
+                            File.WriteAllText(s_DirFile, dirPath + "\\");
                             return;
                         }
 
 
-                        File.WriteAllText(s_DirFile, DirPathSaved + @"\" + DirPath);
+                        File.WriteAllText(s_DirFile, dirPathSaved + dirPath + "\\");
                         return;
                     }
 
-                    Console.WriteLine($"Direcotry {DirPath} does not exist!");
+                    Console.WriteLine($"Direcotry {dirPath} does not exist!");
                 }
-                catch
+                catch 
                 {
-                    File.WriteAllText(s_DirFile, string.Empty);
+                    // Ingnore.
                 }
             }
 
