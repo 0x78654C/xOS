@@ -80,7 +80,6 @@ namespace xOS.Commands
                             return;
                         var readPathStoread = dirPathSaved.Split('\\');
                         var lenDirSeparator = readPathStoread.Length;
-                        Console.WriteLine($"arr len: {lenDirSeparator}");
                         var backwardDir = "";
                         for (int i = 0; i < lenDirSeparator - 2; i++)
                             backwardDir += readPathStoread[i] + "\\";
