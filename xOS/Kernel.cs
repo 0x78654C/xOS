@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using xOS.FileSystem;
+using xOS.UI;
 using Sys = Cosmos.System;
 
 
@@ -52,9 +53,10 @@ namespace xOS
             else
             {
                 s_CurrentLocation = File.ReadAllText(s_CurrentLocationFile);
-                string consoleUser = !string.IsNullOrEmpty(s_CurrentLocation) ? $"{s_User} ({s_CurrentLocation})$ " : $"{s_User} $ ";
-                Console.Write(consoleUser);
-                
+                string consoleUser = !string.IsNullOrEmpty(s_CurrentLocation) ? $"{s_User} ({s_CurrentLocation})" : $"{s_User}";
+                UIColor.ColorConsoleText(ConsoleColor.Green, consoleUser);
+                UIColor.ColorConsoleText(ConsoleColor.Cyan, " $ ");
+
                 // Running commands.
                 var input = Console.ReadLine();
                 RunCommands(input);
