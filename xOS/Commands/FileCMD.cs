@@ -5,7 +5,6 @@ namespace xOS.Commands
     {
         public static void FileCommands(string inputData)
         {
-
             #region Files Section
             //create file in a certain path or root folder
             if (inputData.StartsWith("mf"))
