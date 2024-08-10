@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Threading;
 using xOS.FileSystem;
+using xOS.UI;
 
 namespace xOS.Commands
 {
@@ -17,6 +18,20 @@ namespace xOS.Commands
         public static void SystemCommands(string inputData)
         {
 
+            // Find dir and files by text
+            if (inputData.StartsWith("find"))
+            {
+                if (inputData.Length == 4)
+                {
+                    UIColor.ErrorConsoleTextLine("You need to provide data for search!");
+                    return;
+                }
+                inputData = inputData.Split(' ')[1];
+                var currentPath = File.ReadAllText(s_DirFile);
+                Find.FindFiles(inputData, currentPath);
+            }
+
+
             //list file and folders
             if (inputData.StartsWith("ls"))
             {
@@ -28,7 +43,6 @@ namespace xOS.Commands
 
                 inputData = inputData.Split(' ')[1];
                 Root.ListCommand(inputData);
-
             }
 
             //clear console
