@@ -70,7 +70,7 @@ namespace xOS.FileSystem
                 var dirName = dir.Name;
                 UIColor.ColorConsoleTextLine(ConsoleColor.DarkYellow, dirName);
             }
-
+            DisplayFolderSize(cDir);
             DisplayPartitonSize(drive);
         }
 
@@ -100,20 +100,35 @@ namespace xOS.FileSystem
                 var dirName = dir.Name;
                 UIColor.ColorConsoleTextLine(ConsoleColor.DarkYellow, dirName);
             }
-
+            DisplayFolderSize(pathDirectory);
             DisplayPartitonSize(drive);
         }
 
-        // Display partition information about total size and free space.
+        /// <summary>
+        /// Display partition information about total size and free space.
+        /// </summary>
+        /// <param name="drive"></param>
         private static void DisplayPartitonSize(DriveInfo drive)
         {
-            Console.WriteLine("\n");
-            Console.WriteLine(@"Partition 0:\ :");
             Console.WriteLine("Total Size: " + $"{Conversion.ConvertSize(drive.TotalSize,false)}");
             Console.WriteLine("Available Free Space: " + $"{Conversion.ConvertSize(drive.AvailableFreeSpace,false)}");
         }
 
-        // Initialize the system directories.
+        /// <summary>
+        /// Get directory size.
+        /// </summary>
+        /// <param name="folder"></param>
+        private static void DisplayFolderSize(string folder)
+        {
+            // var dirInfo = new DirectoryInfo(folder).GetFiles("*.*",SearchOption.AllDirectories); - Not supported by Cosmos Kernel.
+            Console.WriteLine("\n");
+            Console.WriteLine(@"Partition 0:\ :"); //TODO: get partition letter dynamic.
+            Console.WriteLine("Current folder Size: " + $"{Conversion.GetDirSize(new DirectoryInfo(folder))}");
+        }
+
+        /// <summary>
+        /// Initialize the system directories.
+        /// </summary>
         private static void InitializeDirectories()
         {
             //initialize 'Sys' directory
