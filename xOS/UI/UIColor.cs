@@ -41,7 +41,7 @@ namespace xOS.UI
         {
             ConsoleColor currentForegrond = Console.ForegroundColor;
             Console.ForegroundColor = ConsoleColor.Red;
-            Console.Write($"Error: {text}");
+            Console.WriteLine($"Error: {text}");
             Console.ForegroundColor = currentForegrond;
         }
     }
