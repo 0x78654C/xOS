@@ -8,7 +8,7 @@ namespace xOS.Commands
     {
         private static readonly string s_UserFile = GlobalVariables.UsersFile;
         private static readonly string s_LoginFile = GlobalVariables.LoginFile;
-        private static readonly string s_SysLogFile = FileSystem.GlobalVariables.SystemLogFile;
+        private static readonly string s_SysLogFile = GlobalVariables.SystemLogFile;
         private static int s_UserPassCheck = 0;
 
         public static void UserCommands(string inputData)
@@ -136,7 +136,7 @@ namespace xOS.Commands
         /// <param name="userFile">Specify the user.u path</param>
         /// <param name="loginFile">Specify the login.t path</param>
         /// <returns></returns>
-        private static string GetUserType(string userFile, string loginFile)
+        public static string GetUserType(string userFile, string loginFile)
         {
             string[] UsersList = File.ReadAllLines(userFile);
             string LogedUser = File.ReadAllText(loginFile).Split('|')[1];
