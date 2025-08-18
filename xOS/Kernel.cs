@@ -15,6 +15,7 @@ namespace xOS
         private static string s_User = string.Empty;
         private static string s_CurrentLocation = string.Empty;
         private static readonly string s_CurrentLocationFile = GlobalVariables.CurrentLocationFile;
+        private static readonly string s_UserFile = GlobalVariables.UsersFile;
         private static readonly string s_LoginFile = GlobalVariables.LoginFile;
         private static readonly string s_SysLogFile = GlobalVariables.SystemLogFile;
         /// <summary>
@@ -47,7 +48,11 @@ namespace xOS
                     s_User = s_UserLogin.Split('|')[1];
                     File.WriteAllText(s_LoginFile, $"1|{s_User}");
                     Console.Clear();
-                    Console.WriteLine($"-------------- Welcome to xOS, {s_User}. Enjoy your stay. -------------- ");
+                    string userAdmin = Commands.UsrCMD.GetUserType(s_UserFile, s_LoginFile);
+                    if (userAdmin == "a")
+                        Console.WriteLine($"-------------- Welcome to xOS, {s_User} (administrator). Enjoy your stay. -------------- ");
+                    else
+                        Console.WriteLine($"-------------- Welcome to xOS, {s_User}. Enjoy your stay. -------------- ");
                 }
             }
             else
