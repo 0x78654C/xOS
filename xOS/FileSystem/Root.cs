@@ -179,7 +179,6 @@ namespace xOS.FileSystem
             //initialize 'cDir.t' file
             if (!File.Exists(s_currentLocationFile))
             {
-                File.Create(s_currentLocationFile);
                 File.WriteAllText("0:\\", s_currentLocationFile); // Initilize the root over partition 0;
                 Console.WriteLine($"Created {s_currentLocationFile} file!");
             }
