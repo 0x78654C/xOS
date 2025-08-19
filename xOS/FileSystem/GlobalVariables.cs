@@ -9,9 +9,11 @@
         public static string UsersDirectory = SystemDirectory + "\\Usr";
         public static string LogDirectory = SystemDirectory + "\\Log";
         public static string TempDirectory = SystemDirectory + "\\Tmp";
+        public static string RFielsDirectory = SystemDirectory + "\\RFiles";
         public static string CurrentLocationFile = TempDirectory + "\\cDir.t";
         public static string LoginFile = TempDirectory + "\\login.t";
         public static string SystemLogFile = LogDirectory + "\\logSYS.l";
         public static string UsersFile = UsersDirectory + "\\usr.u";
+        public static string RFilesFile = RFielsDirectory + "\\RFiles.u";
     }
 }
