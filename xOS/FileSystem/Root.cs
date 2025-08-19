@@ -38,6 +38,7 @@ namespace xOS.FileSystem
         /// 0:\Sys\Usr\
         /// 0:\Sys\User\usr.u - for users login data store
         /// 0:\Sys\Log\logSYS.l - for system logs store
+        /// 0:\Sys\RFiles\RFiles.u - for admin only files.
         /// 0:\Tmp\
         /// 0:\Tmp\cDir.t - Stores current directory used by 'cd' command
         /// 0:\Tmp\loing.t - Stores login state. 1 - loged in, 0 - loged out
