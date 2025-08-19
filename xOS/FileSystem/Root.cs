@@ -16,6 +16,8 @@ namespace xOS.FileSystem
         private static readonly string s_loginFile = GlobalVariables.LoginFile;
         private static readonly string s_systemLogFile = GlobalVariables.SystemLogFile;
         private static readonly string s_usersFile = GlobalVariables.UsersFile;
+        private static readonly string s_rFilesDirectory = GlobalVariables.RFielsDirectory;
+        private static readonly string s_rFilesFile = GlobalVariables.RFilesFile;
         //--------------------------
 
         /// <summary>
@@ -165,11 +167,11 @@ namespace xOS.FileSystem
                 Console.WriteLine($"Created {s_tempDirectory} directory!");
             }
 
-            //initialize 'Tmp' directory
-            if (!Directory.Exists(s_tempDirectory))
+            //initialize 'RFiles' directory
+            if (!Directory.Exists(s_rFilesDirectory))
             {
-                Directory.CreateDirectory(s_tempDirectory);
-                Console.WriteLine($"Created {s_tempDirectory} directory!");
+                Directory.CreateDirectory(s_rFilesDirectory);
+                Console.WriteLine($"Created {s_rFilesDirectory} directory!");
             }
         }
 
@@ -192,6 +194,16 @@ namespace xOS.FileSystem
             {
                 File.Create(s_systemLogFile);
                 Console.WriteLine($"Created {s_systemLogFile} file!");
+            }
+
+            // initialize 'RFiles.u' file
+            if (!File.Exists(s_rFilesFile))
+            {
+                File.Create(s_rFilesFile);
+                Console.WriteLine($"Created {s_rFilesFile} file!");
+                Console.Clear();
+
+                //initiliaze first user account creation on first run
             }
 
             // initialize 'usr.u' file
