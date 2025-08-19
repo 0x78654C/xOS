@@ -39,3 +39,5 @@ r - read only
 10. (DONE) - fix help command to displaymore info
 
 11. - remove fom 'ls' command the partition 0:\ info. make separate command
+
+12. - add network support
