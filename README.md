@@ -5,7 +5,7 @@ A operating system in C# based on Cosmos Kernel\
 For xOS command list just type help in console
 ## Requirements
 Make sure you have:
->[Visual Studio 2019](https://visualstudio.microsoft.com/downloads/)\
+>[Visual Studio 2022](https://visualstudio.microsoft.com/downloads/)\
 >[CosmosOS](https://www.gocosmos.org/download/)
 ## Building
 When open the solution make sure the dependencies and the project have no issues. Now hopfully it should build\
