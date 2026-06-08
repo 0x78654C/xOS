@@ -10,6 +10,7 @@ namespace xOS.FileSystem
         private static readonly string s_systemDirectory = GlobalVariables.SystemDirectory;
         private static readonly string s_userDirectory = GlobalVariables.UserDirectory;
         private static readonly string s_userFile = GlobalVariables.UsersFile;
+        private static readonly string s_systemVolume = GlobalVariables.SystemVolume;
         private static readonly string s_logDirectory = GlobalVariables.LogDirectory;
         private static readonly string s_tempDirectory = GlobalVariables.TempDirectory;
         private static readonly string s_currentLocationFile = GlobalVariables.CurrentLocationFile;
@@ -182,7 +183,7 @@ namespace xOS.FileSystem
             //initialize 'cDir.t' file
             if (!File.Exists(s_currentLocationFile))
             {
-                File.WriteAllText("0:\\", s_currentLocationFile); // Initilize the root over partition 0;
+                File.WriteAllText(s_currentLocationFile, s_systemVolume);
                 Console.WriteLine($"Created {s_currentLocationFile} file!");
             }
 
@@ -193,14 +194,14 @@ namespace xOS.FileSystem
             //initialize 'logSYS.l' file
             if (!File.Exists(s_systemLogFile))
             {
-                File.Create(s_systemLogFile);
+                File.WriteAllText(s_systemLogFile, string.Empty);
                 Console.WriteLine($"Created {s_systemLogFile} file!");
             }
 
             // initialize 'RFiles.u' file
             if (!File.Exists(s_rFilesFile))
             {
-                File.Create(s_rFilesFile);
+                File.WriteAllText(s_rFilesFile, string.Empty);
                 Console.WriteLine($"Created {s_rFilesFile} file!");
                 Console.Clear();
 
@@ -210,7 +211,7 @@ namespace xOS.FileSystem
             // initialize 'usr.u' file
             if (!File.Exists(s_usersFile))
             {
-                File.Create(s_usersFile);
+                File.WriteAllText(s_usersFile, string.Empty);
                 Console.WriteLine($"Created {s_usersFile} file!");
                 Console.Clear();
 
